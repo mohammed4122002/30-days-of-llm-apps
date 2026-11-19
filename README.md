@@ -30,7 +30,7 @@ python day-01/app.py
 | # | المرحلة | المشروع | الأدوات | ✔ |
 |---|---|---|---|---|
 | 01 | أساسيات | [أول نموذج مفتوح المصدر يرد عليك](./day-01/README.md) | Hugging Face Inference API | ⬜ |
-| 02 | أساسيات | [أول سلسلة LangChain: Prompt | LLM | Parser](./day-02/README.md) | LangChain (LCEL) | ⬜ |
+| 02 | أساسيات | [أول سلسلة LangChain: Prompt \| LLM \| Parser](./day-02/README.md) | LangChain (LCEL) | ⬜ |
 | 03 | أساسيات | [قوالب Prompts ذكية: مترجم يغيّر اللهجة](./day-03/README.md) | LangChain Prompt Templates | ⬜ |
 | 04 | أساسيات | [مخرجات منظمة: حوّل نص فوضوي إلى JSON نظيف](./day-04/README.md) | Pydantic + PydanticOutputParser | ⬜ |
 | 05 | أساسيات | [ذاكرة المحادثة: بوت يتذكرك](./day-05/README.md) | RunnableWithMessageHistory | ⬜ |

@@ -60,6 +60,9 @@ python day-01/app.py
 | 29 | نشر وختام | [الإنتاج: تتبع وتقييم مستمر](./day-29/README.md) | LangSmith Production Monitoring | ⬜ |
 | 30 | نشر وختام | [المشروع الختامي: منتج متكامل](./day-30/README.md) | كل ما تعلمناه | ⬜ |
 
+## 📈 خطة النمو
+راجع [`GROWTH_PLAN.md`](./GROWTH_PLAN.md): جدول التواريخ وقائمة كل يوم ومؤشرات الأداء.
+
 ## 📣 النشر على لينكدإن
 راجع [`LINKEDIN_PLAYBOOK.md`](./LINKEDIN_PLAYBOOK.md): لكل يوم كاروسيل 6 شرائح (`carousel.pdf`) وكابشن جاهز (`post.md`)، مع منشور الإعلان والختام.
 

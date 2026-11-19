@@ -1,0 +1,21 @@
+سطر واحد غيّر طريقتي بكتابة تطبيقات الذكاء الاصطناعي: prompt | llm | parser.
+
+📅 اليوم 2 من 30 — أول سلسلة LangChain: Prompt | LLM | Parser
+
+🎯 المشكلة:
+كيف أربط الأجزاء ببعض بدل ما أكتب كود لاصق؟
+
+🛠️ اللي بنيته اليوم (LangChain (LCEL)):
+✅ فكرة الـ pipe operator في LCEL
+✅ ChatPromptTemplate و StrOutputParser
+✅ invoke / stream / batch
+
+💡 الخلاصة: كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون ضخم.
+
+كود اليوم كامل + شرح بالعربي على GitHub (الرابط بأول تعليق 👇)
+
+جربت LCEL قبل؟ شو رأيك فيها؟
+
+🔁 شارك المنشور إذا بتعرف حدا بدو يبدأ رحلته بالذكاء الاصطناعي.
+
+#الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps

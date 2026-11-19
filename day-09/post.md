@@ -19,3 +19,6 @@
 🔁 شارك المنشور إذا بتعرف حدا بدو يبدأ رحلته بالذكاء الاصطناعي.
 
 #الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps
+
+---
+🖼️ **صورة المنشور:** ![](./assets/linkedin.png)

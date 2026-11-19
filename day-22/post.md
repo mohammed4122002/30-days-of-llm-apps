@@ -1,5 +1,7 @@
 رفعت أول dataset بإسمي على Hugging Face. صار لبياناتي رابط، ولشغلي أثر.
 
+📑 اسحب الشرائح ←
+
 📅 اليوم 22 من 30 — ابنِ Dataset ونشره على Hugging Face Hub
 
 🎯 المشكلة:
@@ -21,4 +23,5 @@
 #الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps
 
 ---
-🖼️ **صورة المنشور:** ![](./assets/linkedin.png)
+📑 **الكاروسيل (6 شرائح):** ارفع [`carousel.pdf`](./carousel.pdf) كمستند على لينكدإن، والشرائح منفصلة في `assets/slide-1.jpg … slide-6.jpg`.
+💬 **أول تعليق:** رابط GitHub لكود اليوم.

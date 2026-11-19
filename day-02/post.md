@@ -1,5 +1,7 @@
 سطر واحد غيّر طريقتي بكتابة تطبيقات الذكاء الاصطناعي: prompt | llm | parser.
 
+📑 اسحب الشرائح ←
+
 📅 اليوم 2 من 30 — أول سلسلة LangChain: Prompt | LLM | Parser
 
 🎯 المشكلة:
@@ -21,4 +23,5 @@
 #الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps
 
 ---
-🖼️ **صورة المنشور:** ![](./assets/linkedin.png)
+📑 **الكاروسيل (6 شرائح):** ارفع [`carousel.pdf`](./carousel.pdf) كمستند على لينكدإن، والشرائح منفصلة في `assets/slide-1.jpg … slide-6.jpg`.
+💬 **أول تعليق:** رابط GitHub لكود اليوم.

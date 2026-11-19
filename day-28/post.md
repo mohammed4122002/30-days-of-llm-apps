@@ -1,5 +1,7 @@
 n8n بيعرف يربط 400 أداة. LangChain بيعرف يفكّر. لما جمعتهم صار عندي أتمتة بتفهم.
 
+📑 اسحب الشرائح ←
+
 📅 اليوم 28 من 30 — اربط عالمين: n8n + وكيل LangChain
 
 🎯 المشكلة:
@@ -21,4 +23,5 @@ n8n بيعرف يربط 400 أداة. LangChain بيعرف يفكّر. لما ج
 #الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps
 
 ---
-🖼️ **صورة المنشور:** ![](./assets/linkedin.png)
+📑 **الكاروسيل (6 شرائح):** ارفع [`carousel.pdf`](./carousel.pdf) كمستند على لينكدإن، والشرائح منفصلة في `assets/slide-1.jpg … slide-6.jpg`.
+💬 **أول تعليق:** رابط GitHub لكود اليوم.

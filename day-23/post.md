@@ -1,5 +1,7 @@
 درّبت نموذج وأنا أدرّب أقل من 1% من أوزانه. LoRA حطّت الـ fine-tuning بمتناول الجميع.
 
+📑 اسحب الشرائح ←
+
 📅 اليوم 23 من 30 — Fine-tuning بـ LoRA: درّب نموذجك بدون GPU ضخم
 
 🎯 المشكلة:
@@ -21,4 +23,5 @@
 #الذكاء_الاصطناعي #LangChain #HuggingFace #LangSmith #LLM #AI #30DaysOfLLMApps
 
 ---
-🖼️ **صورة المنشور:** ![](./assets/linkedin.png)
+📑 **الكاروسيل (6 شرائح):** ارفع [`carousel.pdf`](./carousel.pdf) كمستند على لينكدإن، والشرائح منفصلة في `assets/slide-1.jpg … slide-6.jpg`.
+💬 **أول تعليق:** رابط GitHub لكود اليوم.

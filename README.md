@@ -61,7 +61,7 @@ python day-01/app.py
 | 30 | نشر وختام | [المشروع الختامي: منتج متكامل](./day-30/README.md) | كل ما تعلمناه | ⬜ |
 
 ## 📣 النشر على لينكدإن
-راجع [`LINKEDIN_PLAYBOOK.md`](./LINKEDIN_PLAYBOOK.md): منشور تمهيدي، منشور ختامي، جدول نشر، ونصائح.
+راجع [`LINKEDIN_PLAYBOOK.md`](./LINKEDIN_PLAYBOOK.md): لكل يوم كاروسيل 6 شرائح (`carousel.pdf`) وكابشن جاهز (`post.md`)، مع منشور الإعلان والختام.
 
 ## 🤝 المساهمة
 افتح Issue أو PR، وشارك نسختك بالتحدي بوسم `#30DaysOfLLMApps`.

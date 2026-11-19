@@ -86,7 +86,8 @@ function parse(n){
   tools:post.match(/اليوم \((.+)\):/)[1],learn:[...post.matchAll(/^✅ (.+)$/gm)].map(x=>x[1]),
   cta:post.match(/\n\n([^\n]+)\n\n🔁/)[1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
 }
-(async()=>{
+module.exports={STYLE,slide,esc};
+if(require.main===module)(async()=>{
  const D=Array.from({length:30},(_,i)=>parse(i+1));
  const only=process.argv[2]?+process.argv[2]:null;
  const br=await chromium.launch();const pg=await br.newPage({viewport:{width:1080,height:1440}});

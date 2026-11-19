@@ -55,6 +55,7 @@ h1{font-size:64px;line-height:1.45;font-weight:800}
 function slide(k,inner){return `<section class="slide"><div class="w"><div class="top"><div class="brand">${logo}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/6</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`}
 
 function codeText(src){
+ src=src.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]\s?/gu,''); // الشرائح بلا إيموجي
  src=src.replace(/^import sys, pathlib\nsys\.path.*\nfrom shared\.llm import get_llm\n\n/,'');
  const out=[];
  for(const line of src.trimEnd().split('\n')){
@@ -79,12 +80,11 @@ function build(n,D){
  return `<html dir="rtl"><style>${STYLE}</style><body>${s.join('')}</body></html>`;
 }
 
+// بيانات الشرائح في days.json (العنوان، المشكلة، الأدوات، النقاط، الافتتاحية، السؤال)
+const DAYS=JSON.parse(fs.readFileSync(path.join(ROOT,'days.json'),'utf8'));
 function parse(n){
  const d=`day-${String(n).padStart(2,'0')}`;
- const post=fs.readFileSync(path.join(ROOT,d,'post.md'),'utf8');
- return {hook:post.split('\n')[0],title:post.match(/اليوم \d+ من 30 — (.+)/)[1],problem:post.match(/🎯 المشكلة:\n(.+)/)[1],
-  tools:post.match(/اليوم \((.+)\):/)[1],learn:[...post.matchAll(/^✅ (.+)$/gm)].map(x=>x[1]),
-  cta:post.match(/\n\n([^\n]+)\n\n🔁/)[1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
+ return {...DAYS[n-1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
 }
 module.exports={STYLE,slide,esc};
 if(require.main===module)(async()=>{

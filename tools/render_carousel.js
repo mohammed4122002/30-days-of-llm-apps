@@ -60,10 +60,10 @@ const logoFile=path.join(ROOT,'brand/logo.png');
 const brandLogo=fs.existsSync(logoFile)?`<img src="data:image/png;base64,${fs.readFileSync(logoFile).toString('base64')}" style="height:84px">`:
 `<div class="mono"><span>M</span><span style="color:${GOLD}">A</span><i>✦</i></div>`;
 
-// صورة شخصية اختيارية: brand/avatar.jpg أو متغير AVATAR. BRAND_MODE=both (مع MA) أو replace (بدل MA)
+// صورة شخصية اختيارية: brand/avatar.jpg أو متغير AVATAR. BRAND_MODE=replace (بدل MA، الافتراضي) أو both (مع MA)
 const AV=process.env.AVATAR&&fs.existsSync(process.env.AVATAR)?process.env.AVATAR:(fs.existsSync(path.join(ROOT,'brand/avatar.jpg'))?path.join(ROOT,'brand/avatar.jpg'):null);
 const avImg=AV?`<img src="data:image/jpeg;base64,${fs.readFileSync(AV).toString('base64')}">`:'';
-const MODE=process.env.BRAND_MODE||'both';
+const MODE=process.env.BRAND_MODE||'replace';
 const brandMark=!AV?brandLogo:MODE==='replace'?`<div class="avatar">${avImg}</div>`:`<div class="avatar">${avImg}</div>${brandLogo}`;
 const STYLE=`${css}
 @page{size:1080px 1440px;margin:0}
@@ -242,7 +242,7 @@ function parse(n){
  const d=`day-${String(n).padStart(2,'0')}`;
  return {...DAYS[n-1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
 }
-module.exports={STYLE,slide,esc,ic,logo};
+module.exports={STYLE,slide,esc,ic,logo,brandMark};
 if(require.main===module)(async()=>{
  const D=Array.from({length:30},(_,i)=>parse(i+1));
  const only=process.argv[2]?+process.argv[2]:null;

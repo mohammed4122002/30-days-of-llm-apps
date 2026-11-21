@@ -1,7 +1,7 @@
 // صورة منشور الانتقال الواحدة (1080×1350) بنفس تصميم الكاروسيل.  الاستخدام:
 //   FONTS_DIR=<node_modules/@fontsource/> ICONS_DIR=<node_modules/> NODE_PATH=<مسار playwright> node tools/render_bridge_image.js
 const {chromium}=require('playwright');const path=require('path');
-const {STYLE,ic,logo}=require('./render_carousel.js');
+const {STYLE,ic,logo,brandMark}=require('./render_carousel.js');
 const OUT=path.resolve(__dirname,'../announcements/day-00-bridge/post.jpg');
 const G='#C9A24B', GL='#E8C066';
 
@@ -41,7 +41,7 @@ html,body{width:1080px;height:1350px;overflow:hidden}
 
 const logoChip=(name,label)=>`<span><b>${logo(name,20,'#fff')}</b>${label}</span>`;
 const html=`<html dir="rtl"><style>${STYLE}</style>${extra}<body><section class="slide"><div class="w">
-<div class="top"><div class="brand"><div class="mono"><span>M</span><span style="color:${G}">A</span><i>✦</i></div><div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div></div>
+<div class="top"><div class="brand">${brandMark}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div></div>
 <div class="bscene"><div class="halo" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,230,170,.95) 0,rgba(255,220,150,.45) 40%,rgba(255,255,255,0) 70%)"></div>
  <div class="tile d">${logo('n8n',100,GL)}</div><div class="arw">${ic('arrow-right',52,GL,3)}</div><div class="tile g">${ic('brain',120,GL,0,'duotone')}</div></div>
 <div class="headline">30 يوم انتهت.<br><span>والجاية أكبر.</span></div>

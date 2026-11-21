@@ -60,6 +60,11 @@ const logoFile=path.join(ROOT,'brand/logo.png');
 const brandLogo=fs.existsSync(logoFile)?`<img src="data:image/png;base64,${fs.readFileSync(logoFile).toString('base64')}" style="height:84px">`:
 `<div class="mono"><span>M</span><span style="color:${GOLD}">A</span><i>✦</i></div>`;
 
+// صورة شخصية اختيارية: brand/avatar.jpg أو متغير AVATAR. BRAND_MODE=both (مع MA) أو replace (بدل MA)
+const AV=process.env.AVATAR&&fs.existsSync(process.env.AVATAR)?process.env.AVATAR:(fs.existsSync(path.join(ROOT,'brand/avatar.jpg'))?path.join(ROOT,'brand/avatar.jpg'):null);
+const avImg=AV?`<img src="data:image/jpeg;base64,${fs.readFileSync(AV).toString('base64')}">`:'';
+const MODE=process.env.BRAND_MODE||'both';
+const brandMark=!AV?brandLogo:MODE==='replace'?`<div class="avatar">${avImg}</div>`:`<div class="avatar">${avImg}</div>${brandLogo}`;
 const STYLE=`${css}
 @page{size:1080px 1440px;margin:0}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:C,sans-serif;color:#111}
@@ -136,6 +141,12 @@ h1{font-size:58px;line-height:1.45;font-weight:800}
 
 /* شريحة الدعوة */
 .bubble{width:190px;height:190px;border-radius:50%;background:${GOLD_LT};display:flex;align-items:center;justify-content:center;margin-bottom:40px;box-shadow:0 18px 40px rgba(120,90,20,.3)}
+.avatar{flex:none;width:100px;height:100px;border-radius:50%;padding:5px;background:linear-gradient(145deg,#FFF1C4,#E8C066 40%,#C9A24B 70%,#8F6A1F);box-shadow:0 0 24px rgba(255,200,90,.45),0 10px 22px rgba(0,0,0,.25)}
+.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #fff;display:block}
+.avatar.big{width:240px;height:240px;padding:8px;position:relative;box-shadow:0 0 0 14px rgba(201,162,75,.2),0 0 70px 16px rgba(255,205,110,.45),0 24px 50px rgba(0,0,0,.35);margin-bottom:40px}
+.avatar.big img{border-width:5px}
+.avatar.big .badge{position:absolute;right:-6px;bottom:6px;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 30% 20%,#4a4a4a,#151515 60%,#050505);box-shadow:0 0 0 4px #D9B25E,0 10px 20px rgba(0,0,0,.3)}
 .gh{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:44px;font-size:28px;font-weight:800;opacity:.85}
 /* ── طبقة التصميم المتقدم ── */
 .dark{background:linear-gradient(150deg,#363636 0%,#1c1c1c 60%,#111 100%);border:1px solid rgba(232,192,102,.25)}
@@ -168,7 +179,7 @@ h1{font-size:58px;line-height:1.45;font-weight:800}
 .logos span{border:2px solid rgba(201,162,75,.45)}
 `;
 
-function slide(k,inner,ghost=''){return `<section class="slide">${ghost?`<div class="ghost">${ic(ghost,620,'#111',0,'thin')}</div>`:''}<div class="w"><div class="top"><div class="brand">${brandLogo}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/6</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`}
+function slide(k,inner,ghost=''){return `<section class="slide">${ghost?`<div class="ghost">${ic(ghost,620,'#111',0,'thin')}</div>`:''}<div class="w"><div class="top"><div class="brand">${brandMark}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/6</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`}
 
 function codeText(src){
  src=src.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]\s?/gu,''); // الشرائح بلا إيموجي
@@ -219,7 +230,7 @@ function build(n,D){
  s.push(slide(4,`<div class="label">${ic('terminal',30,GOLD_LT,2.4)}الكود</div><div class="term"><div class="bar"><span></span><span></span><span></span><em>${ic('file-code',24,GOLD_LT,2.4)}day-${String(n).padStart(2,'0')}/app.py</em></div><div class="code">${codeText(d.code)}</div></div><div class="logos">${logos}</div>`));
  s.push(slide(5,`<div class="label">${ic('lightbulb',30,GOLD_LT,2.4)}الخلاصة</div><div class="ringwrap">${ring(n)}<div class="big" style="font-size:56px">كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون ضخم.</div></div>
  ${nxt?`<div class="card gold next"><div class="ibox">${ic(DAY_ICON[n+1],50,GOLD_LT)}</div><div><small>بكرة</small>${esc(nxt.title.replace(/: /g,' — '))}</div></div>`:`<div class="card gold next"><div class="ibox">${ic('trophy',50,GOLD_LT)}</div><div>انتهى التحدي. شكرًا لكل من تابع!</div></div>`}`,'calendar-clock'));
- s.push(slide(6,`<div class="bubble">${ic('message-circle',110,GOLD_LT,0,'duotone')}</div><div class="label">${ic('users',30,GOLD_LT,2.4)}دورك</div><div class="big">${esc(d.cta)}</div>
+ s.push(slide(6,`${AV?`<div class="avatar big">${avImg}<div class="badge">${ic('message-circle',46,GOLD_LT,0,'duotone')}</div></div>`:`<div class="bubble">${ic('message-circle',110,GOLD_LT,0,'duotone')}</div>`}<div class="label">${ic('users',30,GOLD_LT,2.4)}دورك</div><div class="big">${esc(d.cta)}</div>
  <div class="acts"><span>${ic('heart',30,GOLD_LT,2.4)}أعجبني</span><span>${ic('repeat-2',30,GOLD_LT,2.4)}شارك</span><span>${ic('bookmark',30,GOLD_LT,2.4)}احفظ</span><span>${ic('user-plus',30,GOLD_LT,2.4)}تابعني</span></div>
  <div class="gh">${logo('github',34,'#111')}الكود كامل على GitHub: الرابط بأول تعليق</div>`,'message-circle'));
  return `<html dir="rtl"><style>${STYLE}</style><body>${s.join('')}</body></html>`;
@@ -238,10 +249,11 @@ if(require.main===module)(async()=>{
  const br=await chromium.launch();const pg=await br.newPage({viewport:{width:1080,height:1440}});
  for(let n=1;n<=30;n++){if(only&&n!==only)continue;
   const d=`day-${String(n).padStart(2,'0')}`;
+  const BASE=process.env.OUT_DIR||ROOT; fs.mkdirSync(path.join(BASE,d,'assets'),{recursive:true});
   await pg.setContent(build(n,D));await pg.evaluate(()=>document.fonts.ready);
   const sl=pg.locator('.slide');
-  for(let k=0;k<6;k++)await sl.nth(k).screenshot({path:path.join(ROOT,d,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
-  await pg.pdf({path:path.join(ROOT,d,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});
+  for(let k=0;k<6;k++)await sl.nth(k).screenshot({path:path.join(BASE,d,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
+  await pg.pdf({path:path.join(BASE,d,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});
  }
  await br.close();
 })();

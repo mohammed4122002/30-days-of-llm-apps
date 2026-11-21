@@ -1,7 +1,7 @@
-// يولّد كاروسيل 6 شرائح + PDF لكل يوم، بأيقونات Lucide وشعارات Simple Icons.
+// يولّد كاروسيل 6 شرائح + PDF لكل يوم، بأيقونات Phosphor الذهبية وشعارات Simple Icons.
 // الاستخدام:
 //   FONTS_DIR=<node_modules/@fontsource/> ICONS_DIR=<node_modules/> NODE_PATH=<مسار playwright> node tools/render_carousel.js [يوم]
-// ICONS_DIR مجلد فيه الحزمتان lucide-static و simple-icons (npm i lucide-static simple-icons).
+// ICONS_DIR مجلد فيه @phosphor-icons/core و simple-icons (npm i @phosphor-icons/core simple-icons).
 const {chromium}=require('playwright');const fs=require('fs');const path=require('path');
 const ROOT=path.resolve(__dirname,'..');
 const FD=process.env.FONTS_DIR;
@@ -17,11 +17,26 @@ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
 // ── الأيقونات ──────────────────────────────────────────────────────────
 // Lucide: أيقونات خطية. ic(name, size, color, stroke)
-function ic(name,size=48,color='currentColor',stroke=2){
-  let s=fs.readFileSync(path.join(ICONS,'lucide-static/icons',name+'.svg'),'utf8');
-  s=s.replace(/<!--[\s\S]*?-->/g,'').replace(/width="\d+"/,`width="${size}"`).replace(/height="\d+"/,`height="${size}"`)
-     .replace(/stroke="currentColor"/,`stroke="${color}"`).replace(/stroke-width="[\d.]+"/,`stroke-width="${stroke}"`);
-  return s.replace(/class="[^"]*"/,'');
+// Phosphor: أيقونات مصمتة (fill) أو ثنائية اللون (duotone). الأسماء القديمة (Lucide) تُترجم هنا.
+const PH={cpu:'cpu',link:'link',languages:'translate',braces:'brackets-curly',brain:'brain',scissors:'scissors',network:'graph',
+ 'file-search':'file-magnifying-glass',search:'magnifying-glass',quote:'quotes',activity:'pulse',database:'database','check-check':'checks',
+ swords:'sword',gauge:'gauge',wrench:'wrench','git-branch':'git-branch',split:'arrows-split',hand:'hand-palm',users:'users-three',tags:'tag',
+ 'cloud-upload':'cloud-arrow-up','sliders-horizontal':'sliders-horizontal','chart-column':'chart-bar','shield-check':'shield-check',
+ 'app-window':'app-window',rocket:'rocket-launch',workflow:'flow-arrow',radar:'binoculars',trophy:'trophy',target:'target','code-xml':'code',
+ lightbulb:'lightbulb','circle-help':'question',terminal:'terminal-window',heart:'heart','repeat-2':'repeat',bookmark:'bookmark-simple',
+ 'user-plus':'user-plus','message-circle':'chat-circle-dots',sparkles:'sparkle','calendar-clock':'calendar-check','arrow-left':'arrow-left',
+ hammer:'hammer','file-code':'file-code',bot:'robot',globe:'globe','message-square':'chat-text','file-text':'file-text',
+ 'arrow-right':'arrow-right','arrow-down':'arrow-down',flag:'flag',clock:'clock',check:'check'};
+let GID=0;
+// ic(name, size, color, _, weight): اللون الذهبي (#C9A24B أو #E8C066) يُرسم بتدرّج معدني
+function ic(name,size=48,color='currentColor',_s,weight='fill'){
+  const ph=PH[name]||name;
+  let s=fs.readFileSync(path.join(ICONS,'@phosphor-icons/core/assets',weight,`${ph}${weight==='regular'?'':'-'+weight}.svg`),'utf8');
+  let fill=color,defs='';
+  if(color===GOLD||color===GOLD_LT||color==='gold'){const id='g'+(GID++);
+    defs=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".4" stop-color="#E8C066"/><stop offset=".75" stop-color="#C9A24B"/><stop offset="1" stop-color="#8F6A1F"/></linearGradient></defs>`;fill=`url(#${id})`;}
+  s=s.replace('fill="currentColor"',`fill="${fill}" width="${size}" height="${size}"`).replace(/opacity="0.2"/g,'opacity="0.38"');
+  return s.replace(/(<svg[^>]*>)/,`$1${defs}`);
 }
 // Simple Icons: شعارات الأدوات (مصمتة).
 function logo(name,size=44,color='#111'){
@@ -55,7 +70,7 @@ radial-gradient(ellipse 600px 220px at 85% 30%,rgba(255,255,255,.9) 0,rgba(255,2
 radial-gradient(ellipse 700px 400px at 90% 100%,rgba(255,214,140,.75) 0,rgba(255,214,140,0) 70%),
 radial-gradient(ellipse 600px 300px at 0% 100%,rgba(170,200,130,.45) 0,rgba(170,200,130,0) 70%),
 linear-gradient(180deg,#bcd9f2 0%,#dcebf6 45%,#fbf1dc 100%)}
-.ghost{position:absolute;left:-90px;bottom:120px;opacity:.07;transform:rotate(-12deg)}
+.ghost{position:absolute;left:-90px;bottom:120px;opacity:.12;transform:rotate(-12deg)}
 .w{position:absolute;inset:0;padding:64px 70px 56px;display:flex;flex-direction:column}
 .top{display:flex;justify-content:space-between;align-items:center;direction:ltr}
 .brand{display:flex;align-items:center;gap:22px}
@@ -121,9 +136,39 @@ h1{font-size:58px;line-height:1.45;font-weight:800}
 
 /* شريحة الدعوة */
 .bubble{width:190px;height:190px;border-radius:50%;background:${GOLD_LT};display:flex;align-items:center;justify-content:center;margin-bottom:40px;box-shadow:0 18px 40px rgba(120,90,20,.3)}
-.gh{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:44px;font-size:28px;font-weight:800;opacity:.85}`;
+.gh{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:44px;font-size:28px;font-weight:800;opacity:.85}
+/* ── طبقة التصميم المتقدم ── */
+.dark{background:linear-gradient(150deg,#363636 0%,#1c1c1c 60%,#111 100%);border:1px solid rgba(232,192,102,.25)}
+.gold{background:linear-gradient(150deg,#F6DE9C 0%,#E8C066 45%,#D4AE57 100%);border:1px solid rgba(255,255,255,.6)}
+.card{box-shadow:0 18px 40px rgba(30,22,5,.28),inset 0 1px 0 rgba(255,255,255,.18)}
+.ibox{width:92px;height:92px;border-radius:26px;background:radial-gradient(circle at 30% 20%,#454545,#141414 65%,#050505);
+ box-shadow:0 0 0 3px #D9B25E,0 10px 22px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.18)}
+.gold .ibox{background:radial-gradient(circle at 30% 20%,#454545,#141414 65%,#050505)}
+.label{background:linear-gradient(150deg,#2a2a2a,#0d0d0d);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.rays{position:absolute;left:50%;top:50%;width:1000px;height:1000px;transform:translate(-50%,-50%);
+ background:repeating-conic-gradient(from 0deg,rgba(255,214,130,.32) 0deg 5deg,rgba(255,255,255,0) 5deg 15deg);
+ -webkit-mask:radial-gradient(circle,#000 0,rgba(0,0,0,.55) 28%,transparent 58%);mask:radial-gradient(circle,#000 0,rgba(0,0,0,.55) 28%,transparent 58%)}
+.halo{width:560px;height:560px;background:radial-gradient(circle,rgba(255,226,150,1) 0,rgba(255,215,130,.55) 38%,rgba(255,255,255,0) 70%)}
+.orbit{border:2px solid rgba(201,162,75,.35)}
+.hero{background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);
+ box-shadow:0 0 0 6px #D9B25E,0 0 0 16px rgba(201,162,75,.22),0 0 80px 20px rgba(255,200,90,.45),0 60px 90px rgba(30,20,5,.55),inset 0 4px 0 rgba(255,255,255,.22)}
+.hero:after{background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,0) 42%)}
+.hero svg{filter:drop-shadow(0 6px 14px rgba(232,192,102,.45))}
+.float{background:radial-gradient(circle at 30% 20%,#444,#121212 65%,#050505);box-shadow:0 0 0 3px #D9B25E,0 18px 36px rgba(0,0,0,.32)}
+.chip{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border:2px solid rgba(201,162,75,.55);box-shadow:0 18px 38px rgba(40,30,10,.22)}
+.chip .lg{background:radial-gradient(circle at 30% 20%,#444,#111 70%)}
+.spk{position:absolute;filter:drop-shadow(0 2px 6px rgba(201,162,75,.6))}
+.dayno{background:linear-gradient(150deg,#2a2a2a,#0d0d0d);box-shadow:0 10px 24px rgba(0,0,0,.28)}
+.qmark,.bubble{background:radial-gradient(circle at 30% 20%,#4a4a4a,#151515 60%,#050505);border:none;
+ box-shadow:0 0 0 6px #D9B25E,0 0 0 16px rgba(201,162,75,.2),0 0 70px 16px rgba(255,205,110,.45),0 24px 50px rgba(0,0,0,.35)}
+.qmark{width:190px;height:190px}.bubble{width:200px;height:200px}
+.ring{filter:drop-shadow(0 10px 24px rgba(201,162,75,.45))}
+.term{border:1px solid rgba(232,192,102,.35)}
+.acts span{background:linear-gradient(150deg,#2a2a2a,#0d0d0d);box-shadow:0 8px 18px rgba(0,0,0,.22);border:1px solid rgba(232,192,102,.35)}
+.logos span{border:2px solid rgba(201,162,75,.45)}
+`;
 
-function slide(k,inner,ghost=''){return `<section class="slide">${ghost?`<div class="ghost">${ic(ghost,620,'#111',1.5)}</div>`:''}<div class="w"><div class="top"><div class="brand">${brandLogo}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/6</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`}
+function slide(k,inner,ghost=''){return `<section class="slide">${ghost?`<div class="ghost">${ic(ghost,620,'#111',0,'thin')}</div>`:''}<div class="w"><div class="top"><div class="brand">${brandLogo}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/6</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`}
 
 function codeText(src){
  src=src.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]\s?/gu,''); // الشرائح بلا إيموجي
@@ -147,7 +192,7 @@ function codeText(src){
 
 const ring=(n)=>{const r=130,c=2*Math.PI*r,f=c*n/30;return `<div class="ring"><svg width="300" height="300" viewBox="0 0 300 300">
 <circle cx="150" cy="150" r="${r}" fill="none" stroke="rgba(0,0,0,.1)" stroke-width="26"/>
-<circle cx="150" cy="150" r="${r}" fill="none" stroke="${GOLD}" stroke-width="26" stroke-linecap="round" stroke-dasharray="${f} ${c}" transform="rotate(-90 150 150)"/></svg>
+<defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".5" stop-color="#E2B95A"/><stop offset="1" stop-color="#9C7A2E"/></linearGradient></defs><circle cx="150" cy="150" r="${r}" fill="none" stroke="url(#rg)" stroke-width="26" stroke-linecap="round" stroke-dasharray="${f} ${c}" transform="rotate(-90 150 150)"/></svg>
 <div class="t"><b>${n}</b><span>/ 30</span></div></div>`};
 
 function cover(n,d){
@@ -156,24 +201,25 @@ function cover(n,d){
  const chips=logos.slice(0,3).map((l,i)=>`<div class="chip" style="${pos[i]}"><div class="lg">${logo(l,40,'#fff')}</div>${LOGO_LABEL[l]}</div>`).join('');
  const fl=[['right:90px;top:90px',orb[0]],['left:190px;top:250px',orb[1]],['right:170px;bottom:150px',orb[2]]]
    .map(([p,o],i)=>`<div class="float" style="${p};transform:rotate(${[-8,6,-4][i]}deg)">${ic(o,52,GOLD_LT,2.2)}</div>`).join('');
- return `<div class="scene"><div class="halo"></div><div class="orbit" style="width:470px;height:470px"></div><div class="orbit" style="width:640px;height:640px;opacity:.6"></div>
- ${fl}<div class="hero">${ic(DAY_ICON[n],190,'#111',1.8)}</div>${chips}<div class="dayno" dir="rtl">اليوم <b>${n}</b> من 30</div></div>
+ const spk=[['left:330px;top:40px',34],['right:330px;top:470px',28],['left:120px;top:420px',22],['right:60px;top:300px',24]].map(([p,z])=>`<div class="spk" style="${p}">${ic('sparkles',z,GOLD_LT)}</div>`).join('');
+ return `<div class="scene"><div class="rays"></div><div class="halo"></div>${spk}<div class="orbit" style="width:470px;height:470px"></div><div class="orbit" style="width:640px;height:640px;opacity:.6"></div>
+ ${fl}<div class="hero">${ic(DAY_ICON[n],200,GOLD_LT,0,'duotone')}</div>${chips}<div class="dayno" dir="rtl">اليوم <b>${n}</b> من 30</div></div>
  <h1>${esc(d.hook)}</h1><div class="swipe">${ic('arrow-left',34,GOLD,3)} اسحب</div>`;
 }
 
 function build(n,D){
  const d=D[n-1], nxt=D[n];
  const LI=['target','code-xml','lightbulb'];
- const cards=d.learn.map((x,i)=>`<div class="card ${i==1?'gold':'dark'}"><div class="ibox">${ic(LI[i],46,i==1?GOLD_LT:'#111',2.2)}</div><div>${esc(x)}</div></div>`).join('');
+ const cards=d.learn.map((x,i)=>`<div class="card ${i==1?'gold':'dark'}"><div class="ibox">${ic(LI[i],50,GOLD_LT)}</div><div>${esc(x)}</div></div>`).join('');
  const logos=DAY_LOGOS(n).map(l=>`<span><i>${logo(l,28,'#fff')}</i>${LOGO_LABEL[l]}</span>`).join('');
  const s=[];
  s.push(slide(1,cover(n,d)));
- s.push(slide(2,`<div class="qmark">${ic('circle-help',100,GOLD_LT,2)}</div><div class="label">${ic('target',30,GOLD_LT,2.4)}المشكلة</div><div class="big quote">${esc(d.problem)}</div>`,DAY_ICON[n]));
+ s.push(slide(2,`<div class="qmark">${ic('circle-help',110,GOLD_LT,0,'duotone')}</div><div class="label">${ic('target',30,GOLD_LT,2.4)}المشكلة</div><div class="big quote">${esc(d.problem)}</div>`,DAY_ICON[n]));
  s.push(slide(3,`<div class="label">${ic('hammer',30,GOLD_LT,2.4)}شو بنينا اليوم</div><div class="cards">${cards}</div>`,'sparkles'));
  s.push(slide(4,`<div class="label">${ic('terminal',30,GOLD_LT,2.4)}الكود</div><div class="term"><div class="bar"><span></span><span></span><span></span><em>${ic('file-code',24,GOLD_LT,2.4)}day-${String(n).padStart(2,'0')}/app.py</em></div><div class="code">${codeText(d.code)}</div></div><div class="logos">${logos}</div>`));
  s.push(slide(5,`<div class="label">${ic('lightbulb',30,GOLD_LT,2.4)}الخلاصة</div><div class="ringwrap">${ring(n)}<div class="big" style="font-size:56px">كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون ضخم.</div></div>
- ${nxt?`<div class="card gold next"><div class="ibox">${ic(DAY_ICON[n+1],46,GOLD_LT,2.2)}</div><div><small>بكرة</small>${esc(nxt.title.replace(/: /g,' — '))}</div></div>`:`<div class="card gold next"><div class="ibox">${ic('trophy',46,GOLD_LT,2.2)}</div><div>انتهى التحدي. شكرًا لكل من تابع!</div></div>`}`,'calendar-clock'));
- s.push(slide(6,`<div class="bubble">${ic('message-circle',100,'#111',2)}</div><div class="label">${ic('users',30,GOLD_LT,2.4)}دورك</div><div class="big">${esc(d.cta)}</div>
+ ${nxt?`<div class="card gold next"><div class="ibox">${ic(DAY_ICON[n+1],50,GOLD_LT)}</div><div><small>بكرة</small>${esc(nxt.title.replace(/: /g,' — '))}</div></div>`:`<div class="card gold next"><div class="ibox">${ic('trophy',50,GOLD_LT)}</div><div>انتهى التحدي. شكرًا لكل من تابع!</div></div>`}`,'calendar-clock'));
+ s.push(slide(6,`<div class="bubble">${ic('message-circle',110,GOLD_LT,0,'duotone')}</div><div class="label">${ic('users',30,GOLD_LT,2.4)}دورك</div><div class="big">${esc(d.cta)}</div>
  <div class="acts"><span>${ic('heart',30,GOLD_LT,2.4)}أعجبني</span><span>${ic('repeat-2',30,GOLD_LT,2.4)}شارك</span><span>${ic('bookmark',30,GOLD_LT,2.4)}احفظ</span><span>${ic('user-plus',30,GOLD_LT,2.4)}تابعني</span></div>
  <div class="gh">${logo('github',34,'#111')}الكود كامل على GitHub: الرابط بأول تعليق</div>`,'message-circle'));
  return `<html dir="rtl"><style>${STYLE}</style><body>${s.join('')}</body></html>`;

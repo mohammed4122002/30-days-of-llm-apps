@@ -13,9 +13,9 @@ html,body{width:1080px;height:1350px;overflow:hidden}
 .bscene .halo{width:380px;height:380px;z-index:0}
 .bscene>.tile,.bscene>.arw{z-index:1}
 .tile{position:relative;width:184px;height:184px;border-radius:54px;display:flex;align-items:center;justify-content:center;box-shadow:0 26px 50px rgba(60,45,15,.35)}
-.tile.d{background:#2b2b2b}
-.tile.g{background:linear-gradient(145deg,#F3D58A,${G} 55%,#9C7A2E);transform:perspective(900px) rotateY(-12deg)}
-.tile.g:after{content:"";position:absolute;inset:8px;border-radius:46px;background:linear-gradient(160deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%)}
+.tile.d{background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);box-shadow:0 0 0 5px #D9B25E,0 0 0 13px rgba(201,162,75,.22),0 0 60px 12px rgba(255,200,90,.4),0 40px 70px rgba(30,20,5,.5),inset 0 3px 0 rgba(255,255,255,.2)}
+.tile.g{background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);box-shadow:0 0 0 5px #D9B25E,0 0 0 13px rgba(201,162,75,.22),0 0 60px 12px rgba(255,200,90,.4),0 40px 70px rgba(30,20,5,.5),inset 0 3px 0 rgba(255,255,255,.2);transform:perspective(900px) rotateY(-12deg)}
+.tile.g:after{display:none;content:"";position:absolute;inset:8px;border-radius:46px;background:linear-gradient(160deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%)}
 .arw{position:relative;width:96px;height:96px;border-radius:50%;background:#111;border:4px solid ${G};display:flex;align-items:center;justify-content:center}
 .headline{font-size:76px;line-height:1.22;font-weight:800;margin-top:14px}.headline span{color:${G}}
 .sub{font-size:30px;line-height:1.5;margin-top:4px;color:#333}
@@ -43,7 +43,7 @@ const logoChip=(name,label)=>`<span><b>${logo(name,20,'#fff')}</b>${label}</span
 const html=`<html dir="rtl"><style>${STYLE}</style>${extra}<body><section class="slide"><div class="w">
 <div class="top"><div class="brand"><div class="mono"><span>M</span><span style="color:${G}">A</span><i>✦</i></div><div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div></div>
 <div class="bscene"><div class="halo" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,230,170,.95) 0,rgba(255,220,150,.45) 40%,rgba(255,255,255,0) 70%)"></div>
- <div class="tile d">${logo('n8n',100,GL)}</div><div class="arw">${ic('arrow-right',52,GL,3)}</div><div class="tile g">${ic('brain',112,'#111',1.8)}</div></div>
+ <div class="tile d">${logo('n8n',100,GL)}</div><div class="arw">${ic('arrow-right',52,GL,3)}</div><div class="tile g">${ic('brain',120,GL,0,'duotone')}</div></div>
 <div class="headline">30 يوم انتهت.<br><span>والجاية أكبر.</span></div>
 <div class="sub">ربطت الأدوات ببعض. هلّق جاي دور العقل نفسه.</div>
 <div class="pcard dark"><div class="row"><div class="ttl"><i>${logo('n8n',38,'#111')}</i>30 Days of n8n</div><div class="st">${ic('check',24,'#111',3)}مكتمل</div></div>

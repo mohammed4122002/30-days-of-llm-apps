@@ -1,42 +1,68 @@
-// كاروسيل منشور الانتقال (6 شرائح + PDF).  الاستخدام:
-//   FONTS_DIR=<node_modules/@fontsource/> NODE_PATH=<مسار playwright> node tools/render_bridge.js
+// كاروسيل منشور الانتقال (7 شرائح + PDF) بتصميم V3.  الاستخدام:
+//   FONTS_DIR=<node_modules/@fontsource/> ICONS_DIR=<node_modules/> NODE_PATH=<مسار playwright> node tools/render_bridge.js
 const {chromium}=require('playwright');const path=require('path');const fs=require('fs');
-const {STYLE,slide,ic,logo}=require('./render_carousel.js');
-const GL='#E8C066';
+const {STYLE,V3CSS,slide3,ic,logo,PORTRAIT,hl,esc}=require('./render_carousel.js');
 const OUT=path.resolve(__dirname,'../announcements/day-00-bridge');fs.mkdirSync(path.join(OUT,'assets'),{recursive:true});
-const G='#C9A24B';
+const G='#C9A24B', GL='#E8C066', T=7;
+
 const extra=`<style>
-.headline{font-size:96px;line-height:1.25;font-weight:800}.headline span{color:${G}}
-.bscene{position:relative;height:420px;display:flex;align-items:center;justify-content:center;gap:60px;direction:ltr;margin-bottom:20px}
-.tile{width:250px;height:250px;border-radius:64px;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 60px rgba(60,45,15,.35)}
-.tile.d{background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);box-shadow:0 0 0 5px #D9B25E,0 0 0 13px rgba(201,162,75,.22),0 0 60px 12px rgba(255,200,90,.4),0 40px 70px rgba(30,20,5,.5),inset 0 3px 0 rgba(255,255,255,.2)}.tile.g{background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);box-shadow:0 0 0 5px #D9B25E,0 0 0 13px rgba(201,162,75,.22),0 0 60px 12px rgba(255,200,90,.4),0 40px 70px rgba(30,20,5,.5),inset 0 3px 0 rgba(255,255,255,.2);transform:perspective(900px) rotateY(-12deg)}
-.tile small{position:absolute}
-.arw{width:110px;height:110px;border-radius:50%;background:#111;border:4px solid ${G};display:flex;align-items:center;justify-content:center}
-.tcap{position:absolute;bottom:0;font-weight:800;font-size:28px;background:#fff;padding:6px 20px;border-radius:99px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
-.lead{font-size:40px;line-height:1.6;margin-top:24px;color:#333}
-.done{display:flex;align-items:center;gap:20px;font-weight:800;font-size:56px;direction:ltr;justify-content:flex-end}
-.done i{font-style:normal;width:76px;height:76px;border-radius:50%;background:${G};display:flex;align-items:center;justify-content:center;font-size:44px}
-.list{display:flex;flex-direction:column;gap:20px;margin-top:40px}
-.q{font-size:84px;line-height:1.4;font-weight:800}.q span{color:${G}}
-.tools{display:flex;flex-direction:column;gap:22px}
-.tool{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:40px;padding:28px 34px;border-radius:24px;box-shadow:0 10px 24px rgba(0,0,0,.2)}
-.tool small{font-size:28px;font-weight:400;opacity:.85}
-.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}.pills span{background:#111;color:#fff;font-weight:800;font-size:30px;padding:10px 26px;border-radius:99px;border:2px solid ${G}}
-.date{font-size:96px;font-weight:800;line-height:1.2}.date span{color:${G}}
-.ma{display:inline-block;background:#111;color:#fff;padding:2px 24px;border-radius:16px;border:3px solid ${G}}
+.mini2{display:flex;align-items:center;gap:18px;direction:ltr;justify-content:flex-end}
+.tile2{width:120px;height:120px;border-radius:32px;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);
+ box-shadow:0 0 0 4px #D9B25E,0 0 0 11px rgba(201,162,75,.2),0 0 50px 8px rgba(255,200,90,.35),0 24px 40px rgba(30,20,5,.4)}
+.arw2{width:70px;height:70px;border-radius:50%;background:#111;border:3px solid ${G};display:flex;align-items:center;justify-content:center}
+.done{display:flex;align-items:center;gap:20px;font-weight:800;font-size:58px;color:#fff;direction:ltr;justify-content:flex-end;margin-bottom:10px}
+.done i{width:76px;height:76px;border-radius:50%;background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);display:flex;align-items:center;justify-content:center}
+.lead2{font-size:34px;color:#e9e2cf;margin-bottom:34px}
+.pc{display:flex;align-items:center;gap:26px;padding:26px 30px;border-radius:26px;font-weight:800;font-size:38px;line-height:1.35;margin-top:22px;
+ background:linear-gradient(150deg,#F6DE9C 0%,#E8C066 45%,#D4AE57 100%);color:#111;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.pc .n{flex:none;font-size:72px;line-height:.8;color:transparent;-webkit-text-stroke:3px #111;direction:ltr;width:120px;text-align:center}
+.q2{font-size:92px;line-height:1.35;font-weight:800;color:#fff}
+.sub2{font-size:38px;line-height:1.6;color:#e9e2cf;margin-top:30px}
+.when{display:flex;align-items:center;gap:40px}
+.when .big2{font-size:110px;line-height:1.15;font-weight:800}.when .big2 span{color:${G}}
+.pills2{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px}
+.pills2 span{display:flex;align-items:center;gap:10px;background:linear-gradient(150deg,#2a2a2a,#0d0d0d);color:#fff;font-weight:800;font-size:28px;padding:10px 24px 10px 14px;border-radius:99px;border:1px solid rgba(232,192,102,.45)}
 </style>`;
-const card=(cls,html)=>`<div class="card ${cls}">${html}</div>`;
-const s=[
-slide(1,`<div class="bscene"><div class="tile d">${logo("n8n",130,GL)}</div><div class="arw">${ic("arrow-right",60,GL,3)}</div><div class="tile g">${ic("brain",150,GL,0,"duotone")}</div></div><div class="headline">30 يوم انتهت.<br><span>والجاية أكبر.</span></div><div class="lead">ربطت الأدوات ببعض.<br>هلّق جاي دور العقل نفسه.</div><div class="swipe">${ic("arrow-left",34,G,3)} اسحب</div>`),
-slide(2,`<div class="label">${ic("flag",30,GL,2.4)}المحطة الأولى</div><div class="done">30 Days of n8n <i>✓</i></div><div class="lead" style="margin-top:12px">30 workflow حقيقية، منها:</div>
-<div class="list">${card('dark','<div class="num">01</div><div>ملخص Gmail يوصلك على Telegram كل صباح</div>')}${card('gold','<div class="num">13</div><div>وكيل RAG بيجاوب من ملفات الشركة مع المصدر</div>')}${card('dark','<div class="num">30</div><div>نظام بيرجّع طالب منقطع عن المدرسة لمساره</div>')}</div>`),
-slide(3,`<div class="label">${ic("lightbulb",30,GL,2.4)}3 دروس طلعت فيها</div><div class="cards">${card('dark','<div class="num">1</div><div>الأتمتة مش أدوات. الأتمتة إنك تشوف المشكلة قبل غيرك.</div>')}${card('gold','<div class="num">2</div><div>الاستمرار أهم من الكمال.</div>')}${card('dark','<div class="num">3</div><div>المحتوى التقني العربي ناقص، ونحنا قادرين نعبّيه.</div>')}</div>`),
-slide(4,`<div class="qmark">${ic("brain",100,GL,2)}</div><div class="label">${ic("circle-help",30,GL,2.4)}السؤال اللي ضل يلاحقني</div><div class="q">شو اللي بيصير<br><span>جوّا عقدة الـ AI؟</span></div><div class="lead">n8n علّمتني أربط الأدوات.<br>هلّق بدي أبني العقل نفسه.</div>`),
-slide(5,`<div class="label">${ic("rocket",30,GL,2.4)}التحدي الجديد</div><div class="done" style="font-size:60px;margin-bottom:30px">30 Days of LLM Apps</div>
-<div class="tools"><div class="tool dark"><span style="display:flex;align-items:center;gap:16px">${logo("huggingface",44,GL)}Hugging Face</span><small>نماذج مفتوحة المصدر</small></div><div class="tool gold"><span style="display:flex;align-items:center;gap:16px">${logo("langchain",40,"#111")}${logo("langgraph",40,"#111")}LangChain + LangGraph</span><small>RAG ووكلاء</small></div><div class="tool dark"><span style="display:flex;align-items:center;gap:16px">${ic("activity",44,GL,2.4)}LangSmith</span><small>تتبع وتقييم بالأرقام</small></div></div>
-<div class="pills"><span>مشكلة حقيقية</span><span>كود مفتوح</span><span>شرح بالعربي</span><span>نتيجة تجربها</span></div>`),
-slide(6,`<div class="bubble">${ic("calendar-clock",110,GL,0,"duotone")}</div><div class="label">${ic("clock",30,GL,2.4)}موعدنا</div><div class="date">الثلاثاء<br><span>9 الصبح</span></div><div class="lead" style="font-weight:800;color:#111;margin-top:40px">ناوي تمشي معي؟ اكتب <span class="ma">معك</span> بالتعليقات، وبوسمك بأول يوم.</div><div class="acts"><span>${ic("heart",30,GL,2.4)}أعجبني</span><span>${ic("repeat-2",30,GL,2.4)}شارك</span><span>${ic("bookmark",30,GL,2.4)}احفظ</span><span>${ic("user-plus",30,GL,2.4)}تابعني</span></div><div class="tl" style="margin-top:36px;font-size:28px">روابط المستودعين بأول تعليق</div>`)];
+
+const s=[];
+// 1 الغلاف
+s.push(slide3(1,T,`<div class="bignum" style="left:-30px;top:-40px;font-size:560px;-webkit-text-stroke:3px rgba(201,162,75,.3)">30</div>
+<h1 style="font-size:96px;line-height:1.3">30 يوم انتهت.<br><mark>والجاية أكبر.</mark></h1>
+<div class="cvrow">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('sparkle',22,GL)}AI Engineer</div></div>`:''}
+<div class="cvside"><div class="mini2"><div class="tile2">${logo('n8n',70,'gold')}</div><div class="arw2">${ic('arrow-right',38,GL,0,'bold')}</div><div class="tile2">${ic('brain',78,GL,0,'duotone')}</div></div>
+<div class="dttl" style="text-align:right;font-size:40px;color:#111">من n8n<br>إلى LLM Apps</div>
+<div class="dttl" style="text-align:right">ربطت الأدوات ببعض.<br>هلّق جاي دور العقل نفسه.</div>
+<div class="swp">اسحب ${ic('arrow-left',28,GL,0,'bold')}</div></div></div>`));
+// 2 المحطة الأولى (داكن)
+s.push(slide3(2,T,`<div class="label">${ic('flag',30,'#111',0,'fill')}المحطة الأولى</div>
+<div class="done">30 Days of n8n <i>${ic('check',44,'#111',0,'bold')}</i></div><div class="lead2">30 workflow حقيقية، منها:</div>
+<div class="pc"><div class="n">01</div><div>ملخص Gmail يوصلك على Telegram كل صباح</div></div>
+<div class="pc"><div class="n">13</div><div>وكيل RAG بيجاوب من ملفات الشركة مع المصدر</div></div>
+<div class="pc"><div class="n">30</div><div>نظام بيرجّع طالب منقطع عن المدرسة لمساره</div></div>`,true));
+// 3 الدروس
+const L=[['الأتمتة مش أدوات. الأتمتة إنك تشوف المشكلة قبل غيرك.','dark'],['الاستمرار أهم من الكمال.','gold'],['المحتوى التقني العربي ناقص، ونحنا قادرين نعبّيه.','dark']];
+s.push(slide3(3,T,`<div class="label">${ic('lightbulb',30,GL)}3 دروس طلعت فيها</div><div class="cards">${L.map(([t,c],i)=>`<div class="bcard ${c}" style="box-shadow:0 18px 40px rgba(30,22,5,.28)"><div class="n">0${i+1}</div><div>${esc(t)}</div></div>`).join('')}</div>`));
+// 4 السؤال (داكن)
+s.push(slide3(4,T,`<div class="label">${ic('question',30,'#111',0,'fill')}السؤال اللي ضل يلاحقني</div>
+<div class="q2">شو اللي بيصير <mark>جوّا عقدة الـ AI؟</mark></div><div class="sub2">n8n علّمتني أربط الأدوات.<br>هلّق بدي أبني العقل نفسه.</div>`,true,
+`<div style="position:absolute;left:-120px;bottom:60px;opacity:.16">${ic('brain',760,GL,0,'thin')}</div>`));
+// 5 التحدي الجديد (مخطط)
+const F=[[logo('huggingface',44,'gold'),'Hugging Face','نماذج مفتوحة المصدر'],[logo('langchain',44,'gold'),'LangChain','RAG وسلاسل'],
+ [ic('pulse',46,GL,0,'duotone'),'LangSmith','تقييم بالأرقام'],[logo('langgraph',44,'gold'),'LangGraph','وكلاء بيستأذنوا'],[ic('rocket-launch',46,GL,0,'duotone'),'النهاية','منتج منشور ومقيّم']];
+s.push(slide3(5,T,`<div class="label">${ic('rocket-launch',30,GL)}التحدي الجديد</div><div class="fttl" style="direction:ltr;text-align:right">30 Days of LLM Apps</div>
+<div class="flow f5">${F.map(([ix,a,b],i)=>`<div class="step ${i%2?'l':'r'}"><div class="node"></div><div class="scard"><div class="ix">${ix}</div><div><small>${a}</small>${b}</div></div></div>`).join('')}</div>`));
+// 6 الموعد
+s.push(slide3(6,T,`<div class="label">${ic('calendar-check',30,GL)}موعدنا</div>
+<div class="when"><div class="dtile">${ic('calendar-check',92,GL,0,'duotone')}</div><div class="big2">الثلاثاء<br><span>9 الصبح</span></div></div>
+<div class="pills2"><span>${ic('target',28,GL)}مشكلة حقيقية</span><span>${ic('code',28,GL)}كود مفتوح</span><span>${ic('translate',28,GL)}شرح بالعربي</span><span>${ic('play',28,GL)}نتيجة تجربها</span></div>`));
+// 7 الدعوة (داكن)
+s.push(slide3(7,T,`<div class="ctawrap">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('chat-circle-dots',24,GL)}معك؟</div></div>`:''}
+<div class="ctaq">ناوي تمشي معي؟<br>اكتب <mark>معك</mark> بالتعليقات، وبوسمك بأول يوم.</div>
+<div class="acts"><span>${ic('heart',30,'#111')}أعجبني</span><span>${ic('repeat',30,'#111')}شارك</span><span>${ic('bookmark-simple',30,'#111')}احفظ</span><span>${ic('user-plus',30,'#111')}تابعني</span></div>
+<div class="gh">${logo('github',30,'#e9e2cf')}روابط المستودعين بأول تعليق</div></div>`,true));
+
 (async()=>{const br=await chromium.launch();const pg=await br.newPage({viewport:{width:1080,height:1440}});
-await pg.setContent(`<html dir="rtl"><style>${STYLE}</style>${extra}<body>${s.join('')}</body></html>`);await pg.evaluate(()=>document.fonts.ready);
-const sl=pg.locator('.slide');for(let k=0;k<6;k++)await sl.nth(k).screenshot({path:path.join(OUT,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
+await pg.setContent(`<html dir="rtl"><style>${STYLE}${V3CSS}</style>${extra}<body>${s.join('')}</body></html>`);await pg.evaluate(()=>document.fonts.ready);
+const sl=pg.locator('.slide');for(let k=0;k<T;k++)await sl.nth(k).screenshot({path:path.join(OUT,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
 await pg.pdf({path:path.join(OUT,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});await br.close();})();

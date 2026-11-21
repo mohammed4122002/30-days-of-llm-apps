@@ -41,7 +41,10 @@ function ic(name,size=48,color='currentColor',_s,weight='fill'){
 // Simple Icons: شعارات الأدوات (مصمتة).
 function logo(name,size=44,color='#111'){
   const s=fs.readFileSync(path.join(ICONS,'simple-icons/icons',name+'.svg'),'utf8');
-  return s.replace('<svg ',`<svg width="${size}" height="${size}" fill="${color}" `);
+  let fill=color,defs='';
+  if(color==='gold'||color===GOLD||color===GOLD_LT){const id='lg'+(GID++);
+    defs=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".4" stop-color="#E8C066"/><stop offset=".75" stop-color="#C9A24B"/><stop offset="1" stop-color="#8F6A1F"/></linearGradient></defs>`;fill=`url(#${id})`;}
+  return s.replace('<svg ',`<svg width="${size}" height="${size}" fill="${fill}" `).replace(/(<svg[^>]*>)/,`$1${defs}`);
 }
 const LOGO_LABEL={huggingface:'Hugging Face',langchain:'LangChain',langgraph:'LangGraph',python:'Python',pydantic:'Pydantic',gradio:'Gradio',n8n:'n8n',fastapi:'FastAPI'};
 
@@ -346,7 +349,7 @@ function parse(n){
  const d=`day-${String(n).padStart(2,'0')}`;
  return {...DAYS[n-1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
 }
-module.exports={STYLE,slide,esc,ic,logo,brandMark};
+module.exports={STYLE,slide,esc,ic,logo,brandMark,slide3,V3CSS,PORTRAIT,hl,ring,LOGO_LABEL};
 if(require.main===module)(async()=>{
  const D=Array.from({length:30},(_,i)=>parse(i+1));
  const only=process.argv[2]?+process.argv[2]:null;

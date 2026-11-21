@@ -24,8 +24,9 @@
 - لكل يوم كاروسيل من 6 شرائح: `day-XX/carousel.pdf`، ارفعه كمستند. الشرائح منفصلة في `assets/slide-1..6.jpg`.
 - ترتيب الشرائح: الغلاف، المشكلة، شو بنينا، الكود، الخلاصة، السؤال.
 - بيانات الشرائح (العنوان والمشكلة والنقاط والافتتاحية والسؤال) موجودة في `days.json`. إذا عدّلت افتتاحية منشور أو سؤاله، عدّلها هناك كمان وأعد التوليد:
-  `FONTS_DIR=<node_modules/@fontsource/> node tools/render_carousel.js [رقم اليوم]`
-  يحتاج حزم cairo وplayfair-display من @fontsource.
+  `FONTS_DIR=<node_modules/@fontsource/> ICONS_DIR=<node_modules/> node tools/render_carousel.js [رقم اليوم]`
+  يحتاج حزم `@fontsource/cairo` و`@fontsource/playfair-display` و`lucide-static` (الأيقونات) و`simple-icons` (شعارات الأدوات).
+- كل يوم إله أيقونة خاصة وشعارات أدواته، معرّفة في `DAY_ICON` و`DAY_LOGOS` بأول ملف `tools/render_carousel.js`.
 - لاستخدام شعارك الأصلي، ضع `brand/logo.png` وأعد التوليد.
 
 ## الجدول

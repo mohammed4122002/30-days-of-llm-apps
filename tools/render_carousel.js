@@ -236,6 +236,110 @@ function build(n,D){
  return `<html dir="rtl"><style>${STYLE}</style><body>${s.join('')}</body></html>`;
 }
 
+// ══════════════ التصميم V3: 7 شرائح، فاتح وداكن بالتناوب ══════════════
+const {HL,FLOW}=require('./design_data.js');
+const PORTRAIT=fs.existsSync(path.join(ROOT,'brand/portrait.jpg'))?`data:image/jpeg;base64,${fs.readFileSync(path.join(ROOT,'brand/portrait.jpg')).toString('base64')}`:null;
+const V3CSS=`
+.slide.dk{background:radial-gradient(ellipse 700px 500px at 85% 8%,rgba(201,162,75,.28) 0,rgba(201,162,75,0) 70%),
+ radial-gradient(ellipse 600px 400px at 10% 100%,rgba(201,162,75,.16) 0,rgba(201,162,75,0) 70%),
+ radial-gradient(circle at 50% 40%,#232323 0,#111 55%,#050505 100%)}
+.dk .nm,.dk .cnt,.dk .tag{color:#fff}.dk .rl{color:#e9e2cf}.dk .sep{background:${GOLD}}
+.dk .label{background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);color:#111;border-color:#F6DE9C}
+.dk .grain{position:absolute;inset:0;opacity:.5;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:6px 6px}
+.bignum{position:absolute;font-weight:800;line-height:.8;color:transparent;-webkit-text-stroke:3px rgba(201,162,75,.55);direction:ltr;pointer-events:none}
+mark{color:inherit;background:linear-gradient(180deg,transparent 56%,rgba(232,192,102,.9) 56%,rgba(232,192,102,.9) 92%,transparent 92%);padding:0 6px}
+.dk mark{color:#F6DE9C;background:none}
+/* الغلاف */
+.cv h1{font-size:66px;line-height:1.42;position:relative}
+.cvrow{display:flex;gap:44px;align-items:flex-end;margin-top:36px;direction:ltr}
+.arch{flex:none;position:relative;width:420px;height:560px;border-radius:210px 210px 40px 40px;padding:8px;
+ background:linear-gradient(160deg,#FFF1C4,#E8C066 35%,#C9A24B 65%,#8F6A1F);
+ box-shadow:0 0 0 14px rgba(201,162,75,.18),0 0 90px 20px rgba(255,200,90,.45),0 40px 80px rgba(30,20,5,.45)}
+.arch img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:202px 202px 32px 32px;display:block;background:#000}
+.arch .tagme{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);white-space:nowrap;display:flex;align-items:center;gap:10px;
+ background:linear-gradient(150deg,#2a2a2a,#0d0d0d);color:#fff;font-weight:800;font-size:24px;padding:10px 24px;border-radius:99px;border:2px solid ${GOLD};box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.cvside{flex:1;direction:rtl;display:flex;flex-direction:column;gap:22px;padding-bottom:30px}
+.dtile{width:150px;height:150px;border-radius:40px;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 30% 18%,#4d4d4d 0,#1a1a1a 55%,#050505 100%);
+ box-shadow:0 0 0 5px #D9B25E,0 0 0 13px rgba(201,162,75,.2),0 0 60px 10px rgba(255,200,90,.4),0 30px 50px rgba(30,20,5,.45)}
+.dnum{font-weight:800;font-size:40px;line-height:1.1}.dnum b{color:${GOLD};font-size:64px}
+.dttl{font-weight:800;font-size:34px;line-height:1.4;color:#222}
+.lrow{display:flex;gap:10px;flex-wrap:wrap;direction:ltr;justify-content:flex-end}
+.lrow span{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.85);border:2px solid rgba(201,162,75,.5);border-radius:99px;padding:6px 16px 6px 6px;font-weight:800;font-size:22px}
+.lrow i{width:38px;height:38px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center}
+.swp{align-self:flex-end;display:flex;align-items:center;gap:12px;background:linear-gradient(150deg,#2a2a2a,#0d0d0d);color:#fff;font-weight:800;font-size:28px;padding:12px 26px;border-radius:99px;border:2px solid ${GOLD}}
+/* المشكلة */
+.pq{font-size:76px;line-height:1.5;font-weight:800;color:#fff;position:relative}
+.pnote{margin-top:46px;display:flex;align-items:center;gap:16px;font-size:30px;color:#cfc6b0;font-weight:800}
+/* الفكرة */
+.fttl{font-weight:800;font-size:46px;line-height:1.35;margin-bottom:34px}
+.flow{position:relative;display:flex;flex-direction:column;gap:26px}
+.flow:before{content:"";position:absolute;left:50%;top:40px;bottom:40px;width:4px;transform:translateX(-50%);
+ background:repeating-linear-gradient(180deg,${GOLD} 0 14px,transparent 14px 26px)}
+.step{position:relative;display:flex;align-items:center;width:100%}
+.step .node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:${GOLD};box-shadow:0 0 0 7px rgba(201,162,75,.25)}
+.scard{width:47%;display:flex;align-items:center;gap:20px;padding:22px 24px;border-radius:26px;font-weight:800;font-size:34px;line-height:1.3;
+ background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border:2px solid rgba(201,162,75,.45);box-shadow:0 16px 34px rgba(40,30,10,.18)}
+.step.r{justify-content:flex-start}.step.l{justify-content:flex-end}
+.scard .ix{flex:none;width:86px;height:86px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 30% 20%,#454545,#141414 65%,#050505);box-shadow:0 0 0 3px #D9B25E,0 10px 20px rgba(0,0,0,.3)}
+.scard small{display:block;font-size:22px;color:${GOLD};letter-spacing:1px}
+.flow.f5 .scard{padding:16px 22px;font-size:30px}.flow.f5 .scard .ix{width:76px;height:76px}.flow.f5{gap:16px}
+/* ما بنيناه */
+.bcard{display:flex;align-items:center;gap:30px;padding:30px 34px;border-radius:28px;font-weight:800;font-size:42px;line-height:1.4}
+.bcard .n{flex:none;font-size:104px;line-height:.8;font-weight:800;color:transparent;-webkit-text-stroke:3px ${GOLD};direction:ltr;width:150px;text-align:center}
+.bcard.gold .n{-webkit-text-stroke:3px #111}
+/* الكود */
+.dk .term{box-shadow:0 0 0 2px rgba(232,192,102,.5),0 0 80px rgba(201,162,75,.25),0 30px 60px rgba(0,0,0,.5)}
+.dk .logos span{background:rgba(255,255,255,.92)}
+/* الدعوة */
+.ctawrap{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ctawrap .arch{width:330px;height:420px;border-radius:165px 165px 34px 34px;margin-bottom:56px}
+.ctawrap .arch img{border-radius:157px 157px 26px 26px}
+.ctaq{font-size:60px;line-height:1.45;font-weight:800;color:#fff}
+.dk .acts{justify-content:center}.dk .acts span{background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);color:#111;border:none}
+.dk .gh{color:#e9e2cf}
+`;
+function slide3(k,total,inner,dark=false,extra=''){
+ return `<section class="slide${dark?' dk':''}">${dark?'<div class="grain"></div>':''}${extra}<div class="w"><div class="top"><div class="brand">${brandMark}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/${total}</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`;
+}
+function hl(text,phrase){const t=esc(text),p=esc(phrase);const i=t.lastIndexOf(p);return i<0?t:t.slice(0,i)+`<mark>${p}</mark>`+t.slice(i+p.length);}
+function build3(n,D){
+ const d=D[n-1], nxt=D[n], T=7, nn=String(n).padStart(2,'0');
+ const s=[];
+ // 1 الغلاف
+ const logos=DAY_LOGOS(n).map(l=>`<span><i>${logo(l,22,'#fff')}</i>${LOGO_LABEL[l]}</span>`).join('');
+ s.push(slide3(1,T,`<div class="bignum" style="left:-30px;top:-40px;font-size:560px;-webkit-text-stroke:3px rgba(201,162,75,.3)">${nn}</div>
+ <h1>${hl(d.hook,HL[n])}</h1>
+ <div class="cvrow">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('sparkle',22,GOLD_LT)}AI Engineer</div></div>`:''}
+ <div class="cvside"><div class="dtile" style="align-self:flex-end">${ic(DAY_ICON[n],92,GOLD_LT,0,'duotone')}</div>
+ <div class="dnum" style="text-align:right">اليوم <b>${n}</b> من 30</div><div class="dttl" style="text-align:right">${esc(d.title.replace(/: /g,' — '))}</div>
+ <div class="lrow">${logos}</div><div class="swp">اسحب ${ic('arrow-left',28,GOLD_LT,0,'bold')}</div></div></div>`));
+ // 2 المشكلة (داكن)
+ s.push(slide3(2,T,`<div class="label">${ic('target',30,'#111',0,'fill')}المشكلة</div><div class="pq">${esc(d.problem)}</div>
+ <div class="pnote">${ic('lightbulb',40,GOLD_LT,0,'duotone')}الحل بالشريحة الجاية</div>`,true,
+ `<div style="position:absolute;left:-120px;bottom:60px;opacity:.16">${ic('question',760,GOLD_LT,0,'thin')}</div>`));
+ // 3 الفكرة (مخطط)
+ const F=FLOW[n];
+ const steps=F.map(([icn,lab],i)=>`<div class="step ${i%2?'l':'r'}"><div class="node"></div><div class="scard"><div class="ix">${ic(icn,46,GOLD_LT,0,'duotone')}</div><div><small>الخطوة ${i+1}</small>${esc(lab)}</div></div></div>`).join('');
+ s.push(slide3(3,T,`<div class="label">${ic('flow-arrow',30,GOLD_LT)}الفكرة</div><div class="fttl">كيف بيشتغل؟</div><div class="flow${F.length>4?' f5':''}">${steps}</div>`));
+ // 4 ما بنيناه
+ const cards=d.learn.map((x,i)=>`<div class="bcard ${i==1?'gold':'dark'}" style="box-shadow:0 18px 40px rgba(30,22,5,.28)"><div class="n">0${i+1}</div><div>${esc(x)}</div></div>`).join('');
+ s.push(slide3(4,T,`<div class="label">${ic('hammer',30,GOLD_LT)}شو بنينا اليوم</div><div class="cards">${cards}</div>`));
+ // 5 الكود (داكن)
+ const clogos=DAY_LOGOS(n).map(l=>`<span><i>${logo(l,28,'#fff')}</i>${LOGO_LABEL[l]}</span>`).join('');
+ s.push(slide3(5,T,`<div class="label">${ic('terminal-window',30,'#111',0,'fill')}الكود</div><div class="term"><div class="bar"><span></span><span></span><span></span><em>${ic('file-code',24,GOLD_LT)}day-${nn}/app.py</em></div><div class="code">${codeText(d.code)}</div></div><div class="logos">${clogos}</div>`,true));
+ // 6 الخلاصة
+ s.push(slide3(6,T,`<div class="label">${ic('lightbulb',30,GOLD_LT)}الخلاصة</div><div class="ringwrap">${ring(n)}<div class="big" style="font-size:56px">كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون <mark>ضخم</mark>.</div></div>
+ ${nxt?`<div class="card gold next"><div class="ibox">${ic(DAY_ICON[n+1],50,GOLD_LT)}</div><div><small>بكرة</small>${esc(nxt.title.replace(/: /g,' — '))}</div></div>`:`<div class="card gold next"><div class="ibox">${ic('trophy',50,GOLD_LT)}</div><div>انتهى التحدي. شكرًا لكل من تابع!</div></div>`}`));
+ // 7 الدعوة (داكن، مع صورتك)
+ s.push(slide3(7,T,`<div class="ctawrap">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('chat-circle-dots',24,GOLD_LT)}دورك</div></div>`:''}
+ <div class="ctaq">${esc(d.cta)}</div>
+ <div class="acts"><span>${ic('heart',30,'#111')}أعجبني</span><span>${ic('repeat',30,'#111')}شارك</span><span>${ic('bookmark-simple',30,'#111')}احفظ</span><span>${ic('user-plus',30,'#111')}تابعني</span></div>
+ <div class="gh">${logo('github',30,'#e9e2cf')}الكود كامل على GitHub: الرابط بأول تعليق</div></div>`,true));
+ return `<html dir="rtl"><style>${STYLE}${V3CSS}</style><body>${s.join('')}</body></html>`;
+}
+
 // بيانات الشرائح في days.json (العنوان، المشكلة، الأدوات، النقاط، الافتتاحية، السؤال)
 const DAYS=JSON.parse(fs.readFileSync(path.join(ROOT,'days.json'),'utf8'));
 function parse(n){
@@ -250,9 +354,10 @@ if(require.main===module)(async()=>{
  for(let n=1;n<=30;n++){if(only&&n!==only)continue;
   const d=`day-${String(n).padStart(2,'0')}`;
   const BASE=process.env.OUT_DIR||ROOT; fs.mkdirSync(path.join(BASE,d,'assets'),{recursive:true});
-  await pg.setContent(build(n,D));await pg.evaluate(()=>document.fonts.ready);
+  await pg.setContent(build3(n,D));await pg.evaluate(()=>document.fonts.ready);
   const sl=pg.locator('.slide');
-  for(let k=0;k<6;k++)await sl.nth(k).screenshot({path:path.join(BASE,d,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
+  const cnt=await sl.count();
+  for(let k=0;k<cnt;k++)await sl.nth(k).screenshot({path:path.join(BASE,d,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
   await pg.pdf({path:path.join(BASE,d,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});
  }
  await br.close();

@@ -31,7 +31,7 @@ https://github.com/mohammed4122002/30-days-of-llm-apps/tree/main/day-27
 ```
 
 ## الكاروسيل
-ارفع [`carousel.pdf`](./carousel.pdf) كمستند. الشرائح منفصلة في `assets/slide-1.jpg` إلى `slide-6.jpg`.
+ارفع [`carousel.pdf`](./carousel.pdf) كمستند. الشرائح السبع منفصلة في `assets/slide-1.jpg` إلى `slide-7.jpg`.
 
 ## قبل النشر
 في هالمنشور خانات لازم تعبيها بنتيجتك الحقيقية بعد ما تشغّل كود اليوم:

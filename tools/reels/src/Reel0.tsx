@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, Easing} from 'remotion';
+import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
 import {TransitionSeries, linearTiming, springTiming} from '@remotion/transitions';
 import {slide} from '@remotion/transitions/slide';
 import {pushCut} from '@remotion/transitions/push-cut';
@@ -248,5 +248,7 @@ export const Reel0: React.FC = () => (
       <TransitionSeries.Sequence durationInFrames={SCENES[6]}><Cta /></TransitionSeries.Sequence>
     </TransitionSeries>
     <Chrome total={REEL0_FRAMES} />
+    {/* موسيقى أصلية مولّدة بـ scripts/gen-music.py ومتزامنة مع المشاهد */}
+    <Audio src={staticFile('audio/reel0.wav')} />
   </AbsoluteFill>
 );

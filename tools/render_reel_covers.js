@@ -9,6 +9,11 @@ const D=JSON.parse(fs.readFileSync(path.join(ROOT,'days.json'),'utf8'));
 const G='#C9A24B',GL='#E8C066';
 const PHASE=n=>n<=5?'أسبوع الأساسيات':n<=10?'أسبوع الـ RAG':n<=15?'أسبوع LangSmith':n<=20?'أسبوع الوكلاء':n<=25?'أسبوع التخصيص':'أسبوع النشر';
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+// تقسيم العنوان لأسطر متوازنة، كل سطر بكتلة لحاله (بدون تداخل بين الكتل)
+const lines=t=>{t=t.replace(/Hugging Face (Hub|Spaces)/g,'Hugging\u00a0Face\u00a0$1').replace(/بـ /g,'بـ\u00a0');
+  if(t.length<=20)return [t];const w=t.split(' ');let best=null;
+  for(let i=1;i<w.length;i++){const a=w.slice(0,i).join(' '),b=w.slice(i).join(' ');const d=Math.max(a.length,b.length);if(!best||d<best[0])best=[d,[a,b]];}
+  return best?best[1]:[t];};
 const topic=t=>{const i=t.indexOf(':');return (i>0?t.slice(0,i):t).trim();};
 
 const CSS=`${STYLE}${V3CSS}
@@ -28,7 +33,9 @@ html,body{width:1080px;height:1920px;margin:0;overflow:hidden}
 .bign{font-weight:800;font-size:330px;line-height:1.05;direction:ltr;margin:0;width:auto;height:auto;border-radius:0;background:none}
 .dark .bign{background:linear-gradient(150deg,#FFF1C4,#E8C066 45%,#C9A24B);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 40px rgba(232,192,102,.5))}
 .ttl{font-weight:800;font-size:82px;line-height:1.3;text-align:center;direction:rtl;margin-top:6px}
-.ttl span{-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:2px 22px;border-radius:20px}
+.ttl{display:flex;flex-direction:column;align-items:center;gap:18px}
+.ttl .ln{display:block;line-height:1.35}
+.ttl span{display:inline-block;padding:4px 26px 10px;border-radius:20px;white-space:nowrap}
 .dark .ttl span{background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);color:#111}.sky .ttl span,.gold .ttl span{background:#111;color:#F6DE9C}
 .bottom{position:relative;margin-top:auto;display:flex;align-items:flex-end;justify-content:center;gap:40px;direction:ltr;width:100%}
 .arch{position:relative;width:330px;height:430px;border-radius:165px 165px 34px 34px;padding:8px}
@@ -45,14 +52,14 @@ html,body{width:1080px;height:1920px;margin:0;overflow:hidden}
 function cover(n){
   const d=D[n-1]; const kind=n%5===0?'gold':n%2?'dark':'sky';
   const t=topic(d.title);
-  const size=t.length>34?68:t.length>24?76:86;
+  const L=lines(t);const m=Math.max(...L.map(x=>x.length));const size=m>20?70:m>16?78:86;
   return `<div class="cov ${kind}"><div class="rays"></div>
   ${n%5===0?`<div class="mile">${n===30?'الختام':'محطة!'}</div>`:''}
   <div class="in">
     <div class="phase">${PHASE(n)}</div>
     <div class="lbl">اليوم</div>
     <div class="bign">${String(n).padStart(2,'0')}</div>
-    <div class="ttl" style="font-size:${size}px"><span>${esc(t)}</span></div>
+    <div class="ttl" style="font-size:${size}px">${L.map(x=>`<div class="ln"><span>${esc(x)}</span></div>`).join('')}</div>
     <div class="bottom">
       <div class="logos">${DAY_LOGOS(n).slice(0,2).map(l=>`<span>${logo(l,46,'gold')}</span>`).join('')}</div>
       <div class="arch"><img src="${PORTRAIT}"></div>
@@ -65,7 +72,7 @@ function cover0(){
   return `<div class="cov dark"><div class="rays"></div><div class="in">
     <div class="phase">التحدي الجديد</div>
     <div class="bign" style="font-size:300px;margin-top:20px">30</div>
-    <div class="ttl" style="font-size:96px;margin-top:30px">يوم انتهت.<br><span>والجاية أكبر.</span></div>
+    <div class="ttl" style="font-size:96px;margin-top:10px"><div class="ln">يوم انتهت.</div><div class="ln"><span>والجاية أكبر.</span></div></div>
     <div class="bottom">
       <div class="tile">${logo('n8n',96,'gold')}</div>
       <div class="arch"><img src="${PORTRAIT}"></div>

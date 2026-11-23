@@ -304,8 +304,42 @@ mark{color:inherit;background:linear-gradient(180deg,transparent 56%,rgba(232,19
 .dk .gh{color:#e9e2cf}
 `;
 function slide3(k,total,inner,dark=false,extra=''){
- return `<section class="slide${dark?' dk':''}">${dark?'<div class="grain"></div>':''}${extra}<div class="w"><div class="top"><div class="brand">${brandMark}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/${total}</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`;
+ const cls=dark===true?' dk':dark==='gold'?' gd':'';
+ return `<section class="slide${cls}">${dark===true?'<div class="grain"></div><div class="rays4 dkr"></div>':''}${dark==='gold'?'<div class="rays4"></div>':''}${STREAKS(k,dark)}${extra}<div class="w"><div class="top"><div class="brand">${brandMark}<div class="sep"></div><div><div class="nm">Mohammed Abu Saada</div><div class="rl">AI Agent <b>•</b> AI Engineer</div></div></div><div class="cnt">${k}/${total}</div></div><div class="body">${inner}</div><div class="tag">INNOVATE<b>•</b>AUTOMATE<b>•</b>TRANSFORM</div></div></section>`;
 }
+// خطوط ضوء ثابتة (روح ريلز الطاقة) بأماكن مختلفة لكل شريحة
+function STREAKS(k,dark){let o='';for(let i=0;i<7;i++){const r=(x)=>{const v=Math.sin(k*91.7+i*37.3+x)*43758.5453;return v-Math.floor(v)};
+ // على الفاتح: بس بالأطراف العليا والسفلى بعيد عن النص، وأخف
+ const light=dark!==true; const y=light?Math.round(1255+r(1)*110):Math.round(r(1)*1440);
+ const l=Math.round(260+r(2)*420),x=Math.round(r(3)*1080-200),h=(3+r(4)*(light?3:6)).toFixed(1);
+ o+=`<div class="streak" style="top:${y}px;left:${x}px;width:${l}px;height:${h}px;background:linear-gradient(90deg,transparent,${dark===true?'rgba(232,192,102,.5)':'rgba(255,255,255,.6)'},transparent)"></div>`;}return o;}
+const PHASE=n=>n<=5?'أسبوع الأساسيات':n<=10?'أسبوع الـ RAG':n<=15?'أسبوع LangSmith':n<=20?'أسبوع الوكلاء':n<=25?'أسبوع التخصيص':'أسبوع النشر';
+const V4CSS=`
+.streak{position:absolute;border-radius:9px;pointer-events:none;opacity:.9}
+.rays4{position:absolute;left:50%;top:42%;width:2200px;height:2200px;transform:translate(-50%,-50%) rotate(8deg);border-radius:50%;pointer-events:none;
+ background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.3) 0deg 6deg,transparent 6deg 18deg);
+ -webkit-mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 25%,transparent 55%);mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 25%,transparent 55%)}
+.rays4.dkr{background:repeating-conic-gradient(from 0deg,rgba(232,192,102,.14) 0deg 6deg,transparent 6deg 18deg)}
+.slide.gd{background:radial-gradient(circle at 50% 32%,#FFF1C4 0,#E8C066 40%,#C9A24B 75%,#8F6A1F 100%)}
+.gd .label{background:#111;color:#F6DE9C;border-color:#111}
+.gd .bcard{background:#111!important;color:#fff!important;border:none}
+.gd .bcard .n{-webkit-text-stroke:3px #E8C066!important}
+.gd .tag,.gd .nm{color:#111}
+/* الغلاف: إبراز بكتلة سوداء */
+.cv mark{background:#111;color:#F6DE9C;border-radius:16px;padding:2px 16px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.phase{align-self:flex-end;font-weight:800;font-size:30px;color:#111;background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);padding:8px 26px;border-radius:99px;box-shadow:0 10px 22px rgba(120,90,20,.25)}
+.swp{font-size:34px;padding:16px 34px;background:linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B);color:#111;border:none;box-shadow:0 14px 30px rgba(120,90,20,.35)}
+/* الكود: شريط ذهبي */
+.term .bar{background:linear-gradient(90deg,#F6DE9C,#C9A24B)!important;border-bottom:none!important}
+.term .bar em{color:#111!important}
+/* الخلاصة: حلقة أكبر ولافتة المحطات */
+.ring{transform:scale(1.22);margin:30px 30px 30px 0}
+.mile{position:relative;align-self:center;margin-bottom:34px;transform:rotate(-4deg);background:#111;color:#E8C066;font-weight:800;font-size:58px;padding:12px 40px;border-radius:20px;
+ border:4px solid #E8C066;white-space:nowrap;box-shadow:0 20px 40px rgba(0,0,0,.3);z-index:3}
+.conf{position:absolute;border-radius:3px;pointer-events:none}
+/* الدعوة: تابعني ضخمة */
+.follow{font-weight:800;font-size:150px;line-height:1.1;margin-top:20px;background:linear-gradient(150deg,#FFF1C4,#E8C066 45%,#C9A24B);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 30px rgba(232,192,102,.55))}
+`;
 function hl(text,phrase){const t=esc(text),p=esc(phrase);const i=t.lastIndexOf(p);return i<0?t:t.slice(0,i)+`<mark>${p}</mark>`+t.slice(i+p.length);}
 function build3(n,D){
  const d=D[n-1], nxt=D[n], T=7, nn=String(n).padStart(2,'0');
@@ -313,10 +347,10 @@ function build3(n,D){
  // 1 الغلاف
  const logos=DAY_LOGOS(n).map(l=>`<span><i>${logo(l,22,'#fff')}</i>${LOGO_LABEL[l]}</span>`).join('');
  s.push(slide3(1,T,`<div class="bignum" style="left:-30px;top:-40px;font-size:560px;-webkit-text-stroke:3px rgba(201,162,75,.3)">${nn}</div>
- <h1>${hl(d.hook,HL[n])}</h1>
+ <div class="cv"><h1>${hl(d.hook,HL[n])}</h1></div>
  <div class="cvrow">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('sparkle',22,GOLD_LT)}AI Engineer</div></div>`:''}
  <div class="cvside"><div class="dtile" style="align-self:flex-end">${ic(DAY_ICON[n],92,GOLD_LT,0,'duotone')}</div>
- <div class="dnum" style="text-align:right">اليوم <b>${n}</b> من 30</div><div class="dttl" style="text-align:right">${esc(d.title.replace(/: /g,' — '))}</div>
+ <div class="phase">${PHASE(n)}</div><div class="dnum" style="text-align:right">اليوم <b>${n}</b> من 30</div><div class="dttl" style="text-align:right">${esc(d.title.replace(/: /g,' — '))}</div>
  <div class="lrow">${logos}</div><div class="swp">اسحب ${ic('arrow-left',28,GOLD_LT,0,'bold')}</div></div></div>`));
  // 2 المشكلة (داكن)
  s.push(slide3(2,T,`<div class="label">${ic('target',30,'#111',0,'fill')}المشكلة</div><div class="pq">${esc(d.problem)}</div>
@@ -328,19 +362,20 @@ function build3(n,D){
  s.push(slide3(3,T,`<div class="label">${ic('flow-arrow',30,GOLD_LT)}الفكرة</div><div class="fttl">كيف بيشتغل؟</div><div class="flow${F.length>4?' f5':''}">${steps}</div>`));
  // 4 ما بنيناه
  const cards=d.learn.map((x,i)=>`<div class="bcard ${i==1?'gold':'dark'}" style="box-shadow:0 18px 40px rgba(30,22,5,.28)"><div class="n">0${i+1}</div><div>${esc(x)}</div></div>`).join('');
- s.push(slide3(4,T,`<div class="label">${ic('hammer',30,GOLD_LT)}شو بنينا اليوم</div><div class="cards">${cards}</div>`));
+ s.push(slide3(4,T,`<div class="label">${ic('hammer',30,GOLD_LT)}شو بنينا اليوم</div><div class="cards">${cards}</div>`,'gold'));
  // 5 الكود (داكن)
  const clogos=DAY_LOGOS(n).map(l=>`<span><i>${logo(l,28,'#fff')}</i>${LOGO_LABEL[l]}</span>`).join('');
  s.push(slide3(5,T,`<div class="label">${ic('terminal-window',30,'#111',0,'fill')}الكود</div><div class="term"><div class="bar"><span></span><span></span><span></span><em>${ic('file-code',24,GOLD_LT)}day-${nn}/app.py</em></div><div class="code">${codeText(d.code)}</div></div><div class="logos">${clogos}</div>`,true));
  // 6 الخلاصة
- s.push(slide3(6,T,`<div class="label">${ic('lightbulb',30,GOLD_LT)}الخلاصة</div><div class="ringwrap">${ring(n)}<div class="big" style="font-size:56px">كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون <mark>ضخم</mark>.</div></div>
+ s.push(slide3(6,T,`${n%5===0?`<div class="mile">${n===30?'خلّصنا التحدي!':'خلّصنا مرحلة!'}</div>`+Array.from({length:46},(_,i)=>{const r=x=>{const v=Math.sin(i*12.9898+x*78.233+n)*43758.5453;return v-Math.floor(v)};return `<div class="conf" style="left:${Math.round(i%2?r(1)*110:950+r(1)*110)}px;top:${Math.round(140+r(2)*1200)}px;width:${Math.round(10+r(3)*16)}px;height:${Math.round(6+r(4)*8)}px;transform:rotate(${Math.round(r(5)*360)}deg);background:${['#111','#E8C066','#fff','#C9A24B'][i%4]}"></div>`}).join(''):''}<div class="label">${ic('lightbulb',30,GOLD_LT)}الخلاصة</div><div class="ringwrap">${ring(n)}<div class="big" style="font-size:56px">كل يوم خطوة صغيرة، وبعد 30 يوم الفرق بيكون <mark>ضخم</mark>.</div></div>
  ${nxt?`<div class="card gold next"><div class="ibox">${ic(DAY_ICON[n+1],50,GOLD_LT)}</div><div><small>بكرة</small>${esc(nxt.title.replace(/: /g,' — '))}</div></div>`:`<div class="card gold next"><div class="ibox">${ic('trophy',50,GOLD_LT)}</div><div>انتهى التحدي. شكرًا لكل من تابع!</div></div>`}`));
  // 7 الدعوة (داكن، مع صورتك)
  s.push(slide3(7,T,`<div class="ctawrap">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('chat-circle-dots',24,GOLD_LT)}دورك</div></div>`:''}
  <div class="ctaq">${esc(d.cta)}</div>
+ <div class="follow">تابعني</div>
  <div class="acts"><span>${ic('heart',30,'#111')}أعجبني</span><span>${ic('repeat',30,'#111')}شارك</span><span>${ic('bookmark-simple',30,'#111')}احفظ</span><span>${ic('user-plus',30,'#111')}تابعني</span></div>
  <div class="gh">${logo('github',30,'#e9e2cf')}الكود كامل على GitHub: الرابط بأول تعليق</div></div>`,true));
- return `<html dir="rtl"><style>${STYLE}${V3CSS}</style><body>${s.join('')}</body></html>`;
+ return `<html dir="rtl"><style>${STYLE}${V3CSS}${V4CSS}</style><body>${s.join('')}</body></html>`;
 }
 
 // بيانات الشرائح في days.json (العنوان، المشكلة، الأدوات، النقاط، الافتتاحية، السؤال)

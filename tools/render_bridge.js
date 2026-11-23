@@ -66,4 +66,4 @@ s.push(slide3(7,T,`<div class="ctawrap">${PORTRAIT?`<div class="arch"><img src="
 (async()=>{const br=await chromium.launch();const pg=await br.newPage({viewport:{width:1080,height:1440}});
 await pg.setContent(`<html dir="rtl"><style>${STYLE}${V3CSS}${V4CSS}</style>${extra}<body>${s.join('')}</body></html>`);await pg.evaluate(()=>document.fonts.ready);
 const sl=pg.locator('.slide');for(let k=0;k<T;k++)await sl.nth(k).screenshot({path:path.join(OUT,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
-await pg.pdf({path:path.join(OUT,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});await br.close();})();
+require('child_process').execFileSync('python3',[path.join(__dirname,'pdf_from_slides.py'),OUT]);await br.close();})();

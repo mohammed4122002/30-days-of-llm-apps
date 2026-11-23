@@ -396,7 +396,8 @@ if(require.main===module)(async()=>{
   const sl=pg.locator('.slide');
   const cnt=await sl.count();
   for(let k=0;k<cnt;k++)await sl.nth(k).screenshot({path:path.join(BASE,d,'assets',`slide-${k+1}.jpg`),type:'jpeg',quality:90});
-  await pg.pdf({path:path.join(BASE,d,'carousel.pdf'),width:'1080px',height:'1440px',printBackground:true});
+  // PDF من صور الشرائح (المطبوع مباشرة بيطلع فيه بقع سودا على لينكدإن)
+  require('child_process').execFileSync('python3',[path.join(__dirname,'pdf_from_slides.py'),path.join(BASE,d)]);
  }
  await br.close();
 })();

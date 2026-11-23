@@ -1,0 +1,5 @@
+$ uvicorn app:app
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+
+$ curl -X POST localhost:8000/ask -d '{"text": "لخّص بجملة: العميل بيشتكي إنه الطلب تأخر 3 أيام وبدو يعرف وين صار"}'
+{"answer":"العميل يشكو من تأخير طلبه لمدة三天，并且还不清楚其位置。"}

@@ -1,1 +1,9 @@
 $ python app.py
+View the evaluation results for experiment: 'Qwen2.5-3B-Instruct-630fa751' at:
+https://smith.langchain.com/o/b428c41d-af7b-4ef1-bfa8-55f14cd22e61/datasets/da291f5e-d1b1-4cf8-a9c0-ff2424d2ee92/compare?selectedSessions=6ed21c14-d84f-4376-bf56-f95c4dbfea28
+1it [00:13, 13.18s/it]2it [00:15,  6.85s/it]3it [00:26,  8.62s/it]4it [00:30,  7.01s/it]5it [00:38,  7.31s/it]6it [00:42,  6.09s/it]7it [00:44,  4.91s/it]8it [00:49,  4.71s/it]8it [00:49,  6.17s/it]
+Qwen2.5-3B-Instruct: 5/8 صح | الزمن 51 ثانية
+View the evaluation results for experiment: 'SmolLM2-1.7B-Instruct-287b0b68' at:
+https://smith.langchain.com/o/b428c41d-af7b-4ef1-bfa8-55f14cd22e61/datasets/da291f5e-d1b1-4cf8-a9c0-ff2424d2ee92/compare?selectedSessions=57770d28-2a8e-441e-b01f-00732ea977b7
+1it [00:36, 36.65s/it]2it [01:14, 37.19s/it]3it [01:55, 39.10s/it]4it [02:44, 42.78s/it]5it [03:11, 37.21s/it]6it [03:53, 38.84s/it]7it [04:11, 31.95s/it]8it [04:48, 33.62s/it]8it [04:48, 36.10s/it]
+SmolLM2-1.7B-Instruct: 5/8 صح | الزمن 290 ثانية

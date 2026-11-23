@@ -17,7 +17,7 @@ def _load(model_id: str):
     torch.set_num_threads(max(1, torch.get_num_threads()))
     tok = AutoTokenizer.from_pretrained(model_id)
     import os
-    dt = torch.float32 if os.getenv("LOCAL_DTYPE", "float32") == "float32" else torch.bfloat16
+    dt = torch.float32 if os.getenv("LOCAL_DTYPE", "bfloat16") == "float32" else torch.bfloat16
     model = AutoModelForCausalLM.from_pretrained(model_id, dtype=dt)
     model.eval()
     return tok, model

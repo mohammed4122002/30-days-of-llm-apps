@@ -11,9 +11,11 @@ def correctness(run, example):  # نفس مقيّم اليوم 13
     return {"key": "correct", "score": int(judge.invoke(q).content.strip()[:1] == "1")}
 
 for model in ["Qwen/Qwen2.5-72B-Instruct", "meta-llama/Llama-3.3-70B-Instruct"]:
-    bot = policy_rag(get_llm(model))
+    llm = get_llm(model)
+    name = getattr(llm, "model_id", model).split("/")[-1]   # بالوضع المحلي: النموذج الصغير المقابل
+    bot = policy_rag(llm)
     t0 = time.time()
     rows = list(evaluate(lambda inp, bot=bot: {"output": bot.invoke(inp["q"])}, data="rag-golden-v1",
-                         evaluators=[correctness], experiment_prefix=model.split("/")[-1]))
+                         evaluators=[correctness], experiment_prefix=name))
     score = sum(r["evaluation_results"]["results"][0].score for r in rows)
-    print(f"{model.split('/')[-1]}: {score}/{len(rows)} صح | الزمن {time.time() - t0:.0f} ثانية")
+    print(f"{name}: {score}/{len(rows)} صح | الزمن {time.time() - t0:.0f} ثانية")

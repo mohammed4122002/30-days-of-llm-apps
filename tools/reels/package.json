@@ -9,16 +9,21 @@
     "render:reel0": "remotion render src/index.ts Reel0 out/reel-00.mp4"
   },
   "dependencies": {
-    "@remotion/cli": "^4.0.545",
-    "@remotion/fonts": "^4.0.545",
-    "@remotion/layout-utils": "^4.0.545",
-    "@remotion/motion-blur": "^4.0.545",
-    "@remotion/noise": "^4.0.545",
-    "@remotion/paths": "^4.0.545",
-    "@remotion/transitions": "^4.0.545",
+    "@remotion/captions": "4.0.546",
+    "@remotion/cli": "4.0.546",
+    "@remotion/effects": "4.0.546",
+    "@remotion/fonts": "4.0.546",
+    "@remotion/layout-utils": "4.0.546",
+    "@remotion/media": "4.0.546",
+    "@remotion/media-utils": "4.0.546",
+    "@remotion/motion-blur": "4.0.546",
+    "@remotion/noise": "4.0.546",
+    "@remotion/paths": "4.0.546",
+    "@remotion/shapes": "4.0.546",
+    "@remotion/transitions": "4.0.546",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "remotion": "^4.0.545"
+    "remotion": "4.0.546"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",

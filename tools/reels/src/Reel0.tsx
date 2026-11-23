@@ -226,8 +226,9 @@ const Cta: React.FC = () => {
 };
 
 // ── التركيب ──
-const TR = 18;
-export const SCENES = [150, 165, 150, 135, 180, 105, 165];
+import timing from './timing.json';
+const TR = timing.transition;
+export const SCENES: number[] = timing.scenes;
 export const REEL0_FRAMES = SCENES.reduce((a, b) => a + b, 0) - TR * (SCENES.length - 1);
 
 export const Reel0: React.FC = () => (
@@ -248,7 +249,7 @@ export const Reel0: React.FC = () => (
       <TransitionSeries.Sequence durationInFrames={SCENES[6]}><Cta /></TransitionSeries.Sequence>
     </TransitionSeries>
     <Chrome total={REEL0_FRAMES} />
-    {/* موسيقى أصلية مولّدة بـ scripts/gen-music.py ومتزامنة مع المشاهد */}
-    <Audio src={staticFile('audio/reel0.wav')} />
+    {/* موسيقى أصلية (gen-music.py) + تعليق صوتي (gen-voice.py)، متزامنين مع المشاهد */}
+    <Audio src={staticFile('audio/reel0-vo.wav')} />
   </AbsoluteFill>
 );

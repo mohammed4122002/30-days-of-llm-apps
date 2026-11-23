@@ -19,6 +19,8 @@ npx remotion render src/index.ts Reel0 out/reel-00.mp4
 - `src/brand.tsx`: الهوية (الألوان، الخطوط، الأيقونات، الخلفيات، النص اللي بيطلع كلمة كلمة، الانتقالات الضوئية).
 - `src/Reel0.tsx`: الريل 0 (منشور الانتقال)، 7 مشاهد مع انتقالات `@remotion/transitions`.
 - `scripts/gen-music.py`: الموسيقى والمؤثرات.
+- `scripts/gen-voice.py`: التعليق الصوتي والمزج.
+- `src/timing.json`: مدة كل مشهد.
 - `scripts/gen-assets.js`: بيولّد `src/assets.ts` (أيقونات Phosphor وشعارات Simple Icons) وبينسخ الخطوط والصور لـ `public/`.
 
 ## الصوت
@@ -29,7 +31,19 @@ npx remotion render src/index.ts Reel0 out/reel-00.mp4
 pip install numpy scipy
 python3 scripts/gen-music.py   # بيطلع public/audio/reel0.wav
 ```
-إذا غيّرت مدة المشاهد في `src/Reel0.tsx`، غيّر `SCENES` بنفس القيم بالسكربت وأعد التوليد.
+## التعليق الصوتي
+`scripts/gen-voice.py` بيقرأ جملة لكل مشهد بصوت عربي مفتوح المصدر (Piper، صوت `ar_JO-kareem`) بسرعة طبيعية،
+وبيمدّد المشاهد بـ `src/timing.json` لتتسع للكلام، وبيعيد توليد الموسيقى على التوقيت الجديد، وبيخفّض الموسيقى وقت الكلام.
+```bash
+pip install piper-tts numpy scipy
+# نزّل ar_JO-kareem-medium.onnx و .onnx.json من:
+# https://huggingface.co/rhasspy/piper-voices/tree/main/ar/ar_JO/kareem/medium
+VOICE_MODEL=<المسار>/ar_JO-kareem-medium.onnx python3 scripts/gen-voice.py
+npx remotion render src/index.ts Reel0 out/reel-00.mp4
+```
+النصوص موجودة بـ `LINES` جوّا السكربت. ترخيص بيانات الصوت محدد بمصدره (https://github.com/AliMokhammad/arabicttstrain)، فراجعه قبل أي استخدام تجاري.
+
+توقيت المشاهد بملف واحد `src/timing.json`، والفيديو والموسيقى والصوت كلهم بيقرؤوا منه.
 
 ## الترخيص
 Remotion مجاني للأفراد والشركات الصغيرة (لحد 3 أشخاص). الشركات الأكبر بتحتاج رخصة: https://remotion.dev/license

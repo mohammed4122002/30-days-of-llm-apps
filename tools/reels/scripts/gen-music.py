@@ -8,8 +8,10 @@ from scipy.io import wavfile
 
 SR = 48000
 FPS = 30
-SCENES = [150, 165, 150, 135, 180, 105, 165]
-TR = 18
+import json
+_T = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src', 'timing.json')))
+SCENES = _T['scenes']
+TR = _T['transition']
 starts = [0]
 for d in SCENES[:-1]:
     starts.append(starts[-1] + d - TR)

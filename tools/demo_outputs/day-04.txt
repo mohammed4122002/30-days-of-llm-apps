@@ -1,0 +1,2 @@
+$ python app.py
+vendor='شركة النور' total=1250.5 currency='-dollar'

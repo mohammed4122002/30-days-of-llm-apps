@@ -1,0 +1,3 @@
+$ python app.py
+  def hist(sid): return store.setdefault(sid, InMemoryChatMessageHistory())
+أسمك محمد كما قلت لي في البداية. كيف يمكنني أن أساعدك اليوم؟

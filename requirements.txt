@@ -20,3 +20,4 @@ gradio
 fastapi
 uvicorn
 python-dotenv
+grandalf

@@ -1,0 +1,5 @@
+$ python app.py
+Downloading builder script: 0.00B [00:00, ?B/s]Downloading builder script: 4.20kB [00:00, 10.5MB/s]
+Downloading builder script: 0.00B [00:00, ?B/s]Downloading builder script: 6.79kB [00:00, 21.9MB/s]
+الأساسي {'accuracy': 0.5} {'f1': 0.5714285714285714}
+المضبوط {'accuracy': 0.8333333333333334} {'f1': 0.8571428571428571}

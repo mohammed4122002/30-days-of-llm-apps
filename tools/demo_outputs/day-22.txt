@@ -1,0 +1,11 @@
+$ python app.py
+DatasetDict({
+    train: Dataset({
+        features: ['text', 'label'],
+        num_rows: 80
+    })
+    test: Dataset({
+        features: ['text', 'label'],
+        num_rows: 20
+    })
+})

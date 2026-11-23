@@ -1,0 +1,22 @@
+$ python app.py
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3601.01it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: aubmindlab/bert-base-arabertv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+trainable params: 296,450 || all params: 135,491,332 || trainable%: 0.2188
+Map:   0%|          | 0/200 [00:00<?, ? examples/s]Map: 100%|██████████| 200/200 [00:00<00:00, 12178.76 examples/s]
+  super().__init__(loader)
+  4%|▍         | 1/25 [00:01<00:42,  1.76s/it]  8%|▊         | 2/25 [00:02<00:26,  1.17s/it] 12%|█▏        | 3/25 [00:03<00:20,  1.06it/s] 16%|█▌        | 4/25 [00:03<00:18,  1.14it/s] 20%|██        | 5/25 [00:04<00:16,  1.23it/s] 24%|██▍       | 6/25 [00:05<00:14,  1.27it/s] 28%|██▊       | 7/25 [00:06<00:13,  1.33it/s] 32%|███▏      | 8/25 [00:06<00:12,  1.35it/s] 36%|███▌      | 9/25 [00:07<00:11,  1.35it/s] 40%|████      | 10/25 [00:08<00:10,  1.40it/s] 44%|████▍     | 11/25 [00:09<00:10,  1.34it/s] 48%|████▊     | 12/25 [00:09<00:09,  1.33it/s] 52%|█████▏    | 13/25 [00:10<00:08,  1.33it/s] 56%|█████▌    | 14/25 [00:11<00:07,  1.38it/s] 60%|██████    | 15/25 [00:11<00:07,  1.40it/s] 64%|██████▍   | 16/25 [00:12<00:06,  1.42it/s] 68%|██████▊   | 17/25 [00:13<00:05,  1.35it/s] 72%|███████▏  | 18/25 [00:14<00:05,  1.37it/s] 76%|███████▌  | 19/25 [00:14<00:04,  1.34it/s] 80%|████████  | 20/25 [00:15<00:03,  1.29it/s] 84%|████████▍ | 21/25 [00:16<00:02,  1.35it/s] 88%|████████▊ | 22/25 [00:17<00:02,  1.33it/s] 92%|█████████▏| 23/25 [00:17<00:01,  1.36it/s] 96%|█████████▌| 24/25 [00:18<00:00,  1.40it/s]100%|██████████| 25/25 [00:19<00:00,  1.41it/s]                                               {'train_runtime': '19.76', 'train_samples_per_second': '10.12', 'train_steps_per_second': '1.265', 'train_loss': '0.577', 'epoch': '1'}
+100%|██████████| 25/25 [00:19<00:00,  1.41it/s]100%|██████████| 25/25 [00:19<00:00,  1.27it/s]

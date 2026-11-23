@@ -1,0 +1,2 @@
+$ python app.py
+Dataset: rag-golden-v1 | عدد الأسئلة: 8

@@ -1,0 +1,5 @@
+$ python app.py
+  from langchain_community.vectorstores import FAISS
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3602.79it/s]
+- السيارة الكهربائية توفر الوقود
+- المركبات الحديثة أقل تلويثًا

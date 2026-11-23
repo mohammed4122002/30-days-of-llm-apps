@@ -47,3 +47,16 @@ npx remotion render src/index.ts Reel0 out/reel-00.mp4
 
 ## الترخيص
 Remotion مجاني للأفراد والشركات الصغيرة (لحد 3 أشخاص). الشركات الأكبر بتحتاج رخصة: https://remotion.dev/license
+
+## ريلز الأيام الثلاثين (`DayReel`)
+كل يوم 7 مشاهد من بيانات الكاروسيل نفسها: الافتتاحية مع صورتك ورقم اليوم، المشكلة، مخطط الفكرة بمسار بيترسم، الكود بينكتب حرف حرف، شو بنينا، الخلاصة مع حلقة التقدم، والدعوة.
+الكلمات بتطلع مع الصوت (الافتتاحية والمشكلة والدعوة)، والموسيقى بتتغير من يوم ليوم.
+```bash
+FONTS_DIR=... ICONS_DIR=... npm run assets                                   # بيانات الأيام (src/days.ts) والأيقونات
+VOICE_MODEL=... python3 scripts/gen-day-audio.py 8                            # صوت اليوم 8 وتوقيته (src/dayTimings.json)
+npx remotion render src/index.ts Day08 out/day-08.mp4
+# ضغط مناسب لإنستغرام (نفس الجودة المرئية، حجم أقل بتلات مرات)
+ffmpeg -i out/day-08.mp4 -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart day-08-ig.mp4
+```
+- `src/DayReel.tsx`: المشاهد والانتقالات. `scripts/synth.py`: الآلات والمؤثرات. `scripts/gen-day-audio.py`: الصوت والموسيقى والتزامن.
+- ملفات الصوت المولّدة (`public/audio/days/`) مش محفوظة بـ git، بتنولّد من جديد بالأمر فوق.

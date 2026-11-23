@@ -78,6 +78,7 @@ const Slam: React.FC<{text: string; size: number; color: string; hl?: string; hl
       </div>
     );
   };
+const PHASE = (n: number) => n <= 5 ? 'أسبوع الأساسيات' : n <= 10 ? 'أسبوع الـ RAG' : n <= 15 ? 'أسبوع LangSmith' : n <= 20 ? 'أسبوع الوكلاء' : n <= 25 ? 'أسبوع التخصيص' : 'أسبوع النشر';
 const fitSize = (t: string, max = 150, min = 86) => Math.round(Math.max(min, Math.min(max, 2600 / Math.pow(Math.max(10, t.length), 0.78))));
 
 // ── الأقسام ──
@@ -90,12 +91,18 @@ const Intro: React.FC<{n: number}> = ({n}) => {
       <Shake power={30}>
         <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', fontFamily: 'Cairo'}}>
           <div style={{fontWeight: 800, fontSize: 90, color: '#fff', opacity: s2, transform: `translateY(${(1 - s2) * -80}px)`, direction: 'rtl', letterSpacing: 4}}>اليوم</div>
-          <div style={{fontWeight: 800, fontSize: 520, lineHeight: 0.95, direction: 'ltr', transform: `scale(${3.5 - 2.5 * Math.min(1, s)})`, opacity: Math.min(1, s * 2),
-            ...goldText, filter: 'drop-shadow(0 0 40px rgba(232,192,102,.6))'}}>{String(n).padStart(2, '0')}</div>
+          <div style={{height: 500, overflow: 'hidden', transform: `scale(${3.5 - 2.5 * Math.min(1, s)})`, opacity: Math.min(1, s * 2), filter: 'drop-shadow(0 0 40px rgba(232,192,102,.6))'}}>
+            {/* بكرة الأرقام: من اليوم السابق لليوم الحالي */}
+            <div style={{transform: `translateY(${-500 * interpolate(f, [6, 22], [0, 1], {...clamp, easing: Easing.out(Easing.back(1.6))})}px)`}}>
+              {[n - 1, n].map((v) => <div key={v} style={{height: 500, fontWeight: 800, fontSize: 520, lineHeight: '500px', direction: 'ltr', textAlign: 'center', ...goldText}}>{String(Math.max(0, v)).padStart(2, '0')}</div>)}
+            </div>
+          </div>
           <div style={{display: 'flex', alignItems: 'center', gap: 16, marginTop: 10, opacity: s2, transform: `scale(${s2})`}}>
             <div style={{...glossy, width: 90, height: 90, borderRadius: 26}}><Icon name={d.icon} size={52} weight="duotone" /></div>
             <div style={{fontWeight: 800, fontSize: 46, color: '#e9e2cf'}}>من 30</div>
           </div>
+          <div style={{marginTop: 28, opacity: s2, transform: `translateY(${(1 - s2) * 60}px)`, fontWeight: 800, fontSize: 38, color: INK, direction: 'rtl',
+            background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)', padding: '8px 30px', borderRadius: 99}}>{PHASE(n)}</div>
         </AbsoluteFill>
       </Shake>
       <Shock /><Flash frames={6} />
@@ -282,9 +289,30 @@ const Progress: React.FC<{n: number}> = ({n}) => {
           </div>
         </AbsoluteFill>
       </Punch>
+      {n % 5 === 0 && <Confetti />}
+      {n % 5 === 0 && <Banner text={n === 30 ? 'خلّصنا التحدي!' : 'خلّصنا مرحلة!'} />}
       <Shock color={GOLD} /><Flash frames={5} color="#fff" />
     </AbsoluteFill>
   );
+};
+const Confetti: React.FC = () => {
+  const f = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      {Array.from({length: 120}).map((_, i) => {
+        const a = random('ca' + i) * Math.PI * 2, v = 16 + random('cv' + i) * 30, g = 0.7;
+        const x = W / 2 + Math.cos(a) * v * f, y = H * 0.42 + Math.sin(a) * v * f + g * f * f, r = 10 + random('cr' + i) * 16;
+        return <div key={i} style={{position: 'absolute', left: x, top: y, width: r, height: r * 0.5, borderRadius: 3, background: i % 3 === 0 ? INK : i % 3 === 1 ? GOLD_LT : '#fff',
+          transform: `rotate(${f * 14 + i * 33}deg)`, opacity: interpolate(f, [0, 55], [1, 0], clamp)}} />;
+      })}
+    </AbsoluteFill>
+  );
+};
+const Banner: React.FC<{text: string}> = ({text}) => {
+  const f = useCurrentFrame(); const s = sp(f - 4, 9, 220);
+  return <div style={{position: 'absolute', top: 300, left: '50%', transform: `translateX(-50%) rotate(-4deg) scale(${Math.min(1.2, s)})`, opacity: Math.min(1, s * 2),
+    background: INK, color: GOLD_LT, fontFamily: 'Cairo', fontWeight: 800, fontSize: 64, padding: '12px 40px', borderRadius: 20, border: `4px solid ${GOLD_LT}`, direction: 'rtl', whiteSpace: 'nowrap',
+    boxShadow: '0 20px 40px rgba(0,0,0,.35)'}}>{text}</div>;
 };
 const Cta: React.FC<{n: number}> = ({n}) => {
   const d = DAYS[n - 1]; const f = useCurrentFrame(); const beat = Math.exp(-((f % FPB) / FPB) * 6);
@@ -307,6 +335,21 @@ const Cta: React.FC<{n: number}> = ({n}) => {
           <Logo name="github" size={34} color="#e9e2cf" />الكود كامل بأول تعليق</div>
       </AbsoluteFill>
       <Flash frames={6} color="#E8C066" />
+      <Sign start={FPB * 8} />
+    </AbsoluteFill>
+  );
+};
+// توقيع: شريط ذهبي بيكشف الشعار
+const Sign: React.FC<{start: number}> = ({start}) => {
+  const f = useCurrentFrame() - start; if (f < 0) return null;
+  const w = interpolate(f, [0, 10], [0, 100], {...clamp, easing: Easing.out(Easing.cubic)});
+  const o = interpolate(f, [8, 14], [0, 1], clamp);
+  return (
+    <AbsoluteFill style={{background: `rgba(0,0,0,${interpolate(f, [0, 10], [0, .95], clamp)})`, alignItems: 'center', justifyContent: 'center', fontFamily: 'Cairo'}}>
+      <div style={{width: `${w}%`, height: 6, background: 'linear-gradient(90deg,transparent,#E8C066,transparent)'}} />
+      <div style={{marginTop: 26, opacity: o, transform: `translateY(${(1 - o) * 30}px)`, fontWeight: 800, fontSize: 34, letterSpacing: 7, color: '#fff', direction: 'ltr'}}>
+        INNOVATE <span style={{color: GOLD_LT}}>•</span> AUTOMATE <span style={{color: GOLD_LT}}>•</span> TRANSFORM</div>
+      <div style={{marginTop: 18, opacity: o, fontFamily: 'Playfair', fontWeight: 700, fontSize: 44, ...goldText}}>Mohammed Abu Saada</div>
     </AbsoluteFill>
   );
 };

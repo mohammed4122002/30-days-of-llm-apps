@@ -29,11 +29,13 @@ fs.writeFileSync(path.resolve(__dirname,'../src/days.ts'),`// ملف مولّد 
 
 // الأيقونات: كل اللي بيستعمله الريل 0 وريلز الأيام
 const need=new Set(['brain','flag','check','lightbulb','question','rocket-launch','pulse','calendar-check','heart','repeat','bookmark-simple','user-plus',
- 'sparkle','arrow-left','target','code','translate','play','chat-circle-dots','check-circle','arrow-down','terminal-window','file-code','hammer','trophy','flow-arrow','warning-circle','cursor-text']);
+ 'sparkle','arrow-left','target','code','translate','play','chat-circle-dots','check-circle','arrow-down','terminal-window','file-code','hammer','trophy','flow-arrow','warning-circle','cursor-text',
+ // ريلز الصوت
+ 'graphics-card','tag','lock','lock-open','fork-knife','door','scroll','key','file','github-logo','warning','x-circle','chat-text','robot','coins','receipt','seal-check','cooking-pot','hand-pointing','chat-teardrop-text','shield-warning','lock-key','chef-hat','cpu','money','arrow-bend-right-down','chat-centered-dots','fire','smiley-x-eyes','user-circle','paper-plane-right','link','x','plus']);
 days.forEach(d=>{need.add(d.icon);if(d.next)need.add(d.next.icon);d.flow.forEach(([i])=>need.add(i));});
 const icons={};
 for(const n of need)for(const w of ['fill','duotone','thin','bold']){const f=path.join(ICONS,'@phosphor-icons/core/assets',w,`${n}-${w}.svg`);if(fs.existsSync(f))icons[`${n}:${w}`]=fs.readFileSync(f,'utf8');}
-const SI=new Set(['huggingface','langchain','langgraph','python','n8n','gmail','telegram','github']);days.forEach(d=>d.logos.forEach(l=>SI.add(l)));
+const SI=new Set(['huggingface','langchain','langgraph','python','n8n','gmail','telegram','github','qwen','meta','mistralai','googlegemini','ollama']);days.forEach(d=>d.logos.forEach(l=>SI.add(l)));
 const logos={};for(const n of SI)logos[n]=fs.readFileSync(path.join(ICONS,'simple-icons/icons',n+'.svg'),'utf8');
 fs.writeFileSync(path.resolve(__dirname,'../src/assets.ts'),`// ملف مولّد من scripts/gen-assets.js. لا تعدّله يدويًا.\nexport const ICONS: Record<string,string> = ${JSON.stringify(icons)};\nexport const LOGOS: Record<string,string> = ${JSON.stringify(logos)};\n`);
 const missing=[...need].filter(n=>!icons[`${n}:fill`]);

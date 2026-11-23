@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مساعدي الذكي | 30 يوم LLM Apps</title>
+<style>
+ body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,sans-serif;background:linear-gradient(180deg,#bcd9f2,#dcebf6 45%,#fbf1dc);min-height:100vh;color:#111}
+ .wrap{max-width:720px;margin:0 auto;padding:24px 16px}
+ h1{margin:0 0 4px;font-size:30px} .sub{color:#555;margin-bottom:16px}
+ .badge{display:inline-block;background:#111;color:#E8C066;border-radius:99px;padding:4px 14px;font-size:13px;font-weight:700;margin-bottom:10px}
+ #log{background:#fff;border:2px solid #111;border-radius:20px;padding:14px;min-height:320px;box-shadow:8px 8px 0 #E8C066}
+ .m{padding:10px 14px;border-radius:16px;margin:8px 0;line-height:1.7;white-space:pre-wrap;max-width:88%}
+ .u{background:#111;color:#fff;margin-left:auto} .b{background:#fbf1dc;border:1px solid #C9A24B}
+ form{display:flex;gap:8px;margin-top:14px} input{flex:1;font-size:17px;padding:12px 14px;border-radius:14px;border:2px solid #111}
+ button{font-size:17px;font-weight:700;padding:0 22px;border-radius:14px;border:0;background:linear-gradient(150deg,#F6DE9C,#E8C066,#C9A24B);color:#111;cursor:pointer}
+ #st{font-size:14px;color:#555;margin-top:8px}
+</style>
+</head>
+<body><div class="wrap">
+ <div class="badge">اليوم 27 من 30</div>
+ <h1>مساعدي الذكي</h1>
+ <div class="sub">نموذج Qwen2.5 مفتوح المصدر بيشتغل جوّا متصفحك أنت: بدون سيرفر، وبدون اشتراك.</div>
+ <div id="log"></div>
+ <form id="f"><input id="q" placeholder="اسألني أي شيء..." autocomplete="off"><button>إرسال</button></form>
+ <div id="st">بنزّل النموذج لأول مرة (حوالي 500 ميغا)، بعدها بيضل محفوظ بالمتصفح...</div>
+</div>
+<script type="module">
+import {pipeline} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2";
+const log = document.getElementById("log"), st = document.getElementById("st");
+const add = (t, c) => { const d = document.createElement("div"); d.className = "m " + c; d.textContent = t; log.appendChild(d); return d; };
+const gen = await pipeline("text-generation", "onnx-community/Qwen2.5-0.5B-Instruct", {dtype: "q4",
+  progress_callback: p => { if (p.status === "progress") st.textContent = `تحميل النموذج: ${Math.round(p.progress)}%`; }});
+st.textContent = "جاهز. اسأل.";
+const history = [{role: "system", content: "أنت مساعد عربي ودود. جاوب باختصار."}];
+document.getElementById("f").onsubmit = async e => {
+  e.preventDefault(); const q = document.getElementById("q").value.trim(); if (!q) return;
+  document.getElementById("q").value = ""; add(q, "u"); history.push({role: "user", content: q});
+  const b = add("بفكّر...", "b"); st.textContent = "بفكّر...";
+  const out = await gen(history, {max_new_tokens: 200, do_sample: false});
+  const a = out[0].generated_text.at(-1).content; b.textContent = a; history.push({role: "assistant", content: a}); st.textContent = "جاهز.";
+};
+</script>
+</body></html>

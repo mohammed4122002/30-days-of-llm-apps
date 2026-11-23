@@ -60,3 +60,11 @@ ffmpeg -i out/day-08.mp4 -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -c:a
 ```
 - `src/DayReel.tsx`: المشاهد والانتقالات. `scripts/synth.py`: الآلات والمؤثرات. `scripts/gen-day-audio.py`: الصوت والموسيقى والتزامن.
 - ملفات الصوت المولّدة (`public/audio/days/`) مش محفوظة بـ git، بتنولّد من جديد بالأمر فوق.
+
+## ريلز «الطاقة» (`EnergyReel`، النسخة المعتمدة)
+حوالي 30 ثانية، كل شي على نبضة 120 بالدقيقة: كلمات بتنضرب على الشاشة، قفزات كاميرا، ومضات واهتزاز، وتبديل أسود/ذهبي/سماء.
+بدون صوت آلي. موسيقى حماسية مؤلّفة بالكود (كيك، تصفيق، بيس، كوردات بتتنفس، أربيجيو، وانفجار بعد المقدمة).
+```bash
+python3 scripts/gen-energy.py 8            # الخطة الإيقاعية (src/energyPlan.json) والموسيقى
+npx remotion render src/index.ts Energy08 out/energy-08.mp4
+```

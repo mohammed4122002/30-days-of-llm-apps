@@ -12,29 +12,29 @@ const planOf = (n: number): Sec[] => ((plans as any)[String(n)]?.sections ?? [])
 export const energyFrames = (n: number) => Math.max(30, ((plans as any)[String(n)]?.beats ?? 2) * FPB + 20);
 
 // ── أدوات الحركة ──
-const sp = (f: number, d = 12, s = 220) => spring({frame: f, fps: 30, config: {damping: d, stiffness: s}});
-const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
+export const sp = (f: number, d = 12, s = 220) => spring({frame: f, fps: 30, config: {damping: d, stiffness: s}});
+export const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
 // قفزة الكاميرا مع كل نبضة
-const Punch: React.FC<{children: React.ReactNode; amt?: number}> = ({children, amt = 0.045}) => {
+export const Punch: React.FC<{children: React.ReactNode; amt?: number}> = ({children, amt = 0.045}) => {
   const f = useCurrentFrame(); const ph = (f % FPB) / FPB;
   return <AbsoluteFill style={{transform: `scale(${1 + amt * Math.exp(-ph * 7)})`}}>{children}</AbsoluteFill>;
 };
 // اهتزاز عند بداية القسم
-const Shake: React.FC<{children: React.ReactNode; power?: number; frames?: number}> = ({children, power = 22, frames = 10}) => {
+export const Shake: React.FC<{children: React.ReactNode; power?: number; frames?: number}> = ({children, power = 22, frames = 10}) => {
   const f = useCurrentFrame(); const k = Math.max(0, 1 - f / frames);
   const x = (random('sx' + f) - 0.5) * power * k, y = (random('sy' + f) - 0.5) * power * k;
   return <AbsoluteFill style={{transform: `translate(${x}px,${y}px) rotate(${(random('sr' + f) - .5) * 2 * k}deg)`}}>{children}</AbsoluteFill>;
 };
-const Flash: React.FC<{color?: string; frames?: number}> = ({color = '#FFF6DA', frames = 5}) => {
+export const Flash: React.FC<{color?: string; frames?: number}> = ({color = '#FFF6DA', frames = 5}) => {
   const f = useCurrentFrame();
   return <AbsoluteFill style={{background: color, opacity: interpolate(f, [0, frames], [0.9, 0], clamp), pointerEvents: 'none'}} />;
 };
-const Shock: React.FC<{y?: string; color?: string}> = ({y = '45%', color = GOLD_LT}) => {
+export const Shock: React.FC<{y?: string; color?: string}> = ({y = '45%', color = GOLD_LT}) => {
   const f = useCurrentFrame(); const p = interpolate(f, [0, 18], [0, 1], clamp);
   return <div style={{position: 'absolute', left: '50%', top: y, width: 200, height: 200, borderRadius: '50%', border: `${14 * (1 - p) + 2}px solid ${color}`,
     transform: `translate(-50%,-50%) scale(${1 + p * 9})`, opacity: 1 - p, pointerEvents: 'none'}} />;
 };
-const Streaks: React.FC<{dark?: boolean}> = ({dark}) => {
+export const Streaks: React.FC<{dark?: boolean}> = ({dark}) => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{overflow: 'hidden', pointerEvents: 'none'}}>
@@ -47,20 +47,20 @@ const Streaks: React.FC<{dark?: boolean}> = ({dark}) => {
     </AbsoluteFill>
   );
 };
-const BG: React.FC<{kind: 'dark' | 'gold' | 'sky'}> = ({kind}) => {
+export const BG: React.FC<{kind: 'dark' | 'gold' | 'sky'}> = ({kind}) => {
   const f = useCurrentFrame();
   if (kind === 'gold') return <AbsoluteFill style={{background: `radial-gradient(circle at ${50 + Math.sin(f / 20) * 10}% 35%, #FFF1C4 0, #E8C066 40%, #C9A24B 75%, #8F6A1F 100%)`}} />;
   if (kind === 'sky') return <AbsoluteFill style={{background: 'radial-gradient(ellipse 900px 500px at 90% 100%,rgba(255,214,140,.9) 0,rgba(255,214,140,0) 70%),radial-gradient(ellipse 700px 260px at 15% 10%,#fff 0,rgba(255,255,255,0) 70%),linear-gradient(180deg,#bcd9f2 0%,#dcebf6 45%,#fbf1dc 100%)'}} />;
   return <AbsoluteFill style={{background: `radial-gradient(ellipse 900px 700px at ${50 + Math.sin(f / 25) * 15}% 30%,rgba(201,162,75,.35) 0,rgba(201,162,75,0) 70%),radial-gradient(circle at 50% 50%,#1d1d1d 0,#0a0a0a 60%,#000 100%)`}} />;
 };
-const Rays: React.FC<{dark?: boolean}> = ({dark}) => {
+export const Rays: React.FC<{dark?: boolean}> = ({dark}) => {
   const f = useCurrentFrame();
   return <div style={{position: 'absolute', left: '50%', top: '45%', width: 2200, height: 2200, transform: `translate(-50%,-50%) rotate(${f * 0.8}deg)`, borderRadius: '50%',
     background: `repeating-conic-gradient(from 0deg, ${dark ? 'rgba(232,192,102,.16)' : 'rgba(255,255,255,.35)'} 0deg 6deg, transparent 6deg 18deg)`,
     WebkitMaskImage: 'radial-gradient(circle,#000 0,rgba(0,0,0,.6) 25%,transparent 55%)', maskImage: 'radial-gradient(circle,#000 0,rgba(0,0,0,.6) 25%,transparent 55%)'}} />;
 };
 // كلمات بتنضرب على الشاشة، مع إبراز
-const Slam: React.FC<{text: string; size: number; color: string; hl?: string; hlStyle?: React.CSSProperties; start?: number; stagger?: number}> =
+export const Slam: React.FC<{text: string; size: number; color: string; hl?: string; hlStyle?: React.CSSProperties; start?: number; stagger?: number}> =
   ({text, size, color, hl, hlStyle, start = 0, stagger = 3}) => {
     const f = useCurrentFrame(); const words = text.replace(/[«»]/g, '').split(' ');
     hl = hl?.replace(/[«»]/g, '');
@@ -79,7 +79,7 @@ const Slam: React.FC<{text: string; size: number; color: string; hl?: string; hl
     );
   };
 const PHASE = (n: number) => n <= 5 ? 'أسبوع الأساسيات' : n <= 10 ? 'أسبوع الـ RAG' : n <= 15 ? 'أسبوع LangSmith' : n <= 20 ? 'أسبوع الوكلاء' : n <= 25 ? 'أسبوع التخصيص' : 'أسبوع النشر';
-const fitSize = (t: string, max = 150, min = 86) => Math.round(Math.max(min, Math.min(max, 2600 / Math.pow(Math.max(10, t.length), 0.78))));
+export const fitSize = (t: string, max = 150, min = 86) => Math.round(Math.max(min, Math.min(max, 2600 / Math.pow(Math.max(10, t.length), 0.78))));
 
 // ── الأقسام ──
 const Intro: React.FC<{n: number}> = ({n}) => {
@@ -109,7 +109,7 @@ const Intro: React.FC<{n: number}> = ({n}) => {
     </AbsoluteFill>
   );
 };
-const PH_STYLES: {bg: 'sky' | 'dark' | 'gold'; color: string; hl: React.CSSProperties}[] = [
+export const PH_STYLES: {bg: 'sky' | 'dark' | 'gold'; color: string; hl: React.CSSProperties}[] = [
   {bg: 'sky', color: INK, hl: {background: INK, color: GOLD_LT}},
   {bg: 'dark', color: '#fff', hl: {background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)', color: INK}},
   {bg: 'gold', color: INK, hl: {background: INK, color: '#F6DE9C'}},
@@ -295,7 +295,7 @@ const Progress: React.FC<{n: number}> = ({n}) => {
     </AbsoluteFill>
   );
 };
-const Confetti: React.FC = () => {
+export const Confetti: React.FC = () => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
@@ -308,7 +308,7 @@ const Confetti: React.FC = () => {
     </AbsoluteFill>
   );
 };
-const Banner: React.FC<{text: string}> = ({text}) => {
+export const Banner: React.FC<{text: string}> = ({text}) => {
   const f = useCurrentFrame(); const s = sp(f - 4, 9, 220);
   return <div style={{position: 'absolute', top: 300, left: '50%', transform: `translateX(-50%) rotate(-4deg) scale(${Math.min(1.2, s)})`, opacity: Math.min(1, s * 2),
     background: INK, color: GOLD_LT, fontFamily: 'Cairo', fontWeight: 800, fontSize: 64, padding: '12px 40px', borderRadius: 20, border: `4px solid ${GOLD_LT}`, direction: 'rtl', whiteSpace: 'nowrap',
@@ -340,7 +340,7 @@ const Cta: React.FC<{n: number}> = ({n}) => {
   );
 };
 // توقيع: شريط ذهبي بيكشف الشعار
-const Sign: React.FC<{start: number}> = ({start}) => {
+export const Sign: React.FC<{start: number}> = ({start}) => {
   const f = useCurrentFrame() - start; if (f < 0) return null;
   const w = interpolate(f, [0, 10], [0, 100], {...clamp, easing: Easing.out(Easing.cubic)});
   const o = interpolate(f, [8, 14], [0, 1], clamp);
@@ -354,7 +354,7 @@ const Sign: React.FC<{start: number}> = ({start}) => {
   );
 };
 
-const Header: React.FC<{total: number}> = ({total}) => {
+export const Header: React.FC<{total: number}> = ({total}) => {
   const f = useCurrentFrame(); const o = interpolate(f, [FPB * 1.5, FPB * 2], [0, 1], clamp);
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>

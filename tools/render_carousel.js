@@ -384,7 +384,7 @@ function parse(n){
  const d=`day-${String(n).padStart(2,'0')}`;
  return {...DAYS[n-1],code:fs.readFileSync(path.join(ROOT,d,'app.py'),'utf8')};
 }
-module.exports={STYLE,slide,esc,ic,logo,brandMark,slide3,V3CSS,PORTRAIT,hl,ring,LOGO_LABEL,PH,DAY_ICON,DAY_LOGOS};
+module.exports={STYLE,slide,esc,ic,logo,brandMark,slide3,V3CSS,V4CSS,PORTRAIT,hl,ring,LOGO_LABEL,PH,DAY_ICON,DAY_LOGOS};
 if(require.main===module)(async()=>{
  const D=Array.from({length:30},(_,i)=>parse(i+1));
  const only=process.argv[2]?+process.argv[2]:null;

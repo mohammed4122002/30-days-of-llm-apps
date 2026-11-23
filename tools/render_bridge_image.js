@@ -1,7 +1,7 @@
 // صورة منشور الانتقال الواحدة (1080×1350) بتصميم V3.  الاستخدام:
 //   FONTS_DIR=<node_modules/@fontsource/> ICONS_DIR=<node_modules/> NODE_PATH=<مسار playwright> node tools/render_bridge_image.js
 const {chromium}=require('playwright');const path=require('path');
-const {STYLE,V3CSS,slide3,ic,logo,PORTRAIT}=require('./render_carousel.js');
+const {STYLE,V3CSS,V4CSS,slide3,ic,logo,PORTRAIT}=require('./render_carousel.js');
 const OUT=path.resolve(__dirname,'../announcements/day-00-bridge/post.jpg');
 const G='#C9A24B', GL='#E8C066';
 
@@ -9,9 +9,9 @@ const extra=`<style>
 html,body{width:1080px;height:1350px;overflow:hidden}
 .slide{height:1350px}.cnt{display:none}
 .w{padding:56px 64px 44px}
-.body{justify-content:flex-start;padding-top:40px}
-h1.hd{font-size:96px;line-height:1.28;font-weight:800;position:relative}
-.row2{display:flex;gap:34px;align-items:center;margin-top:44px;direction:ltr}
+.body{justify-content:flex-start;padding-top:20px}
+h1.hd{font-size:96px;line-height:1.55;font-weight:800;position:relative}
+.row2{display:flex;gap:34px;align-items:center;margin-top:18px;direction:ltr}
 .row2 .arch{width:380px;height:510px;border-radius:190px 190px 36px 36px}
 .row2 .arch img{border-radius:182px 182px 28px 28px}
 .col{flex:1;direction:rtl;display:flex;flex-direction:column;gap:14px}
@@ -35,9 +35,9 @@ h1.hd{font-size:96px;line-height:1.28;font-weight:800;position:relative}
 </style>`;
 
 const chip=(n,l)=>`<span><b>${logo(n,18,'#fff')}</b>${l}</span>`;
-const html=`<html dir="rtl"><style>${STYLE}${V3CSS}</style>${extra}<body>${slide3(1,1,`
+const html=`<html dir="rtl"><style>${STYLE}${V3CSS}${V4CSS}</style>${extra}<body>${slide3(1,1,`
 <div class="bignum" style="left:-30px;top:-60px;font-size:540px;-webkit-text-stroke:3px rgba(201,162,75,.3)">30</div>
-<h1 class="hd">30 يوم انتهت.<br><mark>والجاية أكبر.</mark></h1>
+<div class="cv"><h1 class="hd">30 يوم انتهت.<br><mark>والجاية أكبر.</mark></h1></div>
 <div class="row2">${PORTRAIT?`<div class="arch"><img src="${PORTRAIT}"><div class="tagme">${ic('sparkle',22,GL)}AI Engineer</div></div>`:''}
 <div class="col">
  <div class="pcard dark"><div class="ph">30 Days of n8n<i>${logo('n8n',32,'gold')}</i></div>
@@ -49,7 +49,7 @@ const html=`<html dir="rtl"><style>${STYLE}${V3CSS}</style>${extra}<body>${slide
   <div class="chips">${chip('huggingface','Hugging Face')}${chip('langchain','LangChain')}${chip('langgraph','LangGraph')}</div>
   <div class="pbar"><i style="width:3%"></i></div><div class="meta"><span>30 تطبيق ذكاء اصطناعي · بالعربي</span><span dir="ltr">0 / 30</span></div></div>
 </div></div>
-<div class="cta2" style="margin-top:56px">${ic('chat-circle-dots',44,G,0,'duotone')}معك؟ اكتب <b>معك</b> بالتعليقات</div>`)}</body></html>`;
+<div class="cta2" style="margin-top:26px">${ic('chat-circle-dots',44,G,0,'duotone')}معك؟ اكتب <b>معك</b> بالتعليقات</div>`)}</body></html>`;
 
 (async()=>{const br=await chromium.launch();const pg=await br.newPage({viewport:{width:1080,height:1350},deviceScaleFactor:2});
 await pg.setContent(html);await pg.evaluate(()=>document.fonts.ready);

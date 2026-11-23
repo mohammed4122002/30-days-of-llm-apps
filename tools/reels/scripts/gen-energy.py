@@ -20,7 +20,15 @@ def phrases(hook):
     while len(out) > 3: out[-2] += ' ' + out.pop()
     return out
 
+def plan0():
+    """الريل 0 (منشور الانتقال): مشاهد مخصصة، وكل مشهد إله نوع موسيقي (الأول) وعارض (r)"""
+    return [['intro', 2, {'r': 'i0'}], ['phrase', 4, {'r': 't', 'text': '30 يوم انتهت.', 'i': 0}],
+            ['phrase', 4, {'r': 't', 'text': 'والجاية أكبر.', 'i': 2, 'hl': 'والجاية أكبر.'}], ['built', 6, {'r': 'n8n'}],
+            ['phrase', 4, {'r': 't', 'text': 'الاستمرار أهم من الكمال.', 'i': 1, 'hl': 'أهم من الكمال.'}], ['problemTitle', 2, {'r': 'q'}],
+            ['problem', 4, {'r': 'q2'}], ['flow', 6, {'r': 'tools'}], ['progress', 4, {'r': 'llm'}], ['phrase', 4, {'r': 'date'}], ['cta', 10, {'r': 'cta0'}]]
+
 def plan(d):
+    if d.get('day0'): return plan0()
     ph = phrases(d['hook']); k = len(d['flow'])
     secs = [['intro', 2, {}]]
     for i, p in enumerate(ph): secs.append(['phrase', 4 if len(p) < 45 else 6, {'text': p, 'i': i}])
@@ -87,7 +95,7 @@ def build(day, d):
         else:
             w = T.whoosh(.4, True); T.add(w, at - .38, .7, -.3); T.add(w, at - .38, .7, .3)
             T.add(T.impact(.7 if kind not in ('phrase',) else .5), at, .7)
-        if kind == 'phrase' and _['i'] == 0: T.add(T.impact(1.2), at, 1.0)          # الانفجار بعد المقدمة
+        if kind == 'phrase' and _.get('i') == 0: T.add(T.impact(1.2), at, 1.0)          # الانفجار بعد المقدمة
         if kind == 'problemTitle': T.add(T.impact(1.1), at, 1.0)
         if kind == 'flow':
             for i in range(len(d['flow'])): T.add(T.bell(86 + key + [0, 3, 5, 7, 10][i], .8), at + (1 + i) * BEAT, .35)
@@ -114,9 +122,10 @@ if __name__ == '__main__':
     dd = json.loads(subprocess.run(['node', '-e', "console.log(JSON.stringify(require(process.argv[1])))", os.path.join(REELS, '..', 'design_data.js')], capture_output=True, text=True, check=True).stdout)
     for i, d in enumerate(D): d['hl'] = dd['HL'][i + 1]; d['flow'] = dd['FLOW'][i + 1]
     days = list(range(1, 31)) if sys.argv[1:] == ['all'] else [int(a) for a in sys.argv[1:]]
+    D0 = {'day0': True, 'flow': [0, 0, 0, 0], 'hook': '', 'hl': ''}
     path = os.path.join(REELS, 'src', 'energyPlan.json'); plans = json.load(open(path)) if os.path.exists(path) else {}
     for day in days:
-        P, tb = build(day, D[day - 1])
+        P, tb = build(day, D0 if day == 0 else D[day - 1])
         plans[str(day)] = {'sections': P, 'beats': int(tb)}
         json.dump(plans, open(path, 'w'), ensure_ascii=False, indent=1)
         print(f'day {day:02d}: {tb} beats = {tb * BEAT:.1f}s')

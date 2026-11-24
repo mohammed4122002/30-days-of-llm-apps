@@ -14,6 +14,7 @@ P = json.load(open(os.path.join(REELS, 'src', f'voiceDay{day:02d}.json'), encodi
 OFF, END = P['off'], P['end']
 SC = {k: (a + OFF, b + OFF) for k, a, b in P['scenes']}
 v = lambda s: s + OFF                                      # من زمن الصوت لزمن الفيديو
+INTRO_END = P['scenes'][1][1] + OFF                       # الإيقاع بيدخل بعد ثاني مشهد (الخطّاف)
 
 # ── الصوت ──
 sr, vo = wavfile.read(os.path.join(REELS, 'public', 'audio', 'voice', f'day-{day:02d}-voice.wav'))
@@ -31,7 +32,7 @@ nb = int(END / BEAT)
 bed = np.zeros(T.n)
 for q in range(nb):
     at = q * BEAT; bar = q // 4; ch = PROG[bar % 4]; root = ROOTS[bar % 4]
-    intro = at < SC['four'][0]; outro = at > SC['outro'][0] + .3
+    intro = at < INTRO_END; outro = at > SC['outro'][0] + .3
     if not outro:
         if q % 2 == 0 and not intro: T.add(T.kick(.75), at, .8)
         if q % 2 == 1 and not intro: T.add(T.clap(), at, .45, .1)
@@ -64,26 +65,62 @@ def keys(a, b):
 for k, (a, b) in SC.items():
     if k not in ('hook',): w = X.whoosh(.35, True); X.add(w, a - .33, .32, -.3); X.add(w, a - .33, .32, .3)
 ting(OFF, .45); X.add(X.impact(.6), OFF, .55)
-X.add(X.impact(.7), v(6.14), .6); X.add(X.bell(88, 1.2), v(7.94), .35)          # أربع سطور
-keys(v(6.4), v(9.4))
-X.add(X.tick(40), v(16.9), .9); X.add(X.impact(.5), v(16.9), .45)                # قفل
-X.add(X.riser(1.3), v(21.25) - 1.3, .45); X.add(X.impact(.9), v(21.3), .7)       # فتح + Hugging Face
-for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(21.35) + i * .06, .22, (-.5, -.2, .2, .5)[i])
-X.add(X.tick(36), v(36.12), .6)                                                   # باب المطبخ
-for i in range(3): pop(v(45.36) + i * .11, 96, .28, (-.4, 0, .4)[i])              # رشّة ملح
-X.add(X.bell(81, 1.0), v(49.04), .25); X.add(X.tick(52), v(51.54), .7)           # الحساب والمفتاح
-keys(v(57.0), v(58.9))
-X.add(X.impact(.8), v(59.6), .6)                                                  # تحذير
-for i in range(4): X.add(X.tick(88 if i % 2 else 83), v(60.5) + i * .16, .45)
-pop(v(62.14), 79, .4)
-keys(v(65.8), v(68.9)); keys(v(75.6), v(77.0))
-X.add(X.bell(91, 1.2), v(77.28), .35)                                             # خلصت
-X.add(X.impact(.7), v(79.6), .55); ting(v(79.62), .4)
-w = X.whoosh(.3, True); X.add(w, v(80.6), .3)                                     # إرسال السؤال
-pop(v(84.52), 88, .35); keys(v(84.7), v(88.2))
-X.add(X.impact(.9), v(90.4), .65); ting(v(90.45), .35)                            # الجملة الذهبية
-for tt in (101.4, 102.0, 102.55, 103.1, 103.6): pop(v(tt), 84 + int((tt * 10) % 7), .3)
-X.add(X.riser(1.4), v(106.98) - 1.4, .4); X.add(X.impact(.8), v(106.98), .55)
+if day == 1:
+    X.add(X.impact(.7), v(6.14), .6); X.add(X.bell(88, 1.2), v(7.94), .35)          # أربع سطور
+    keys(v(6.4), v(9.4))
+    X.add(X.tick(40), v(16.9), .9); X.add(X.impact(.5), v(16.9), .45)                # قفل
+    X.add(X.riser(1.3), v(21.25) - 1.3, .45); X.add(X.impact(.9), v(21.3), .7)       # فتح + Hugging Face
+    for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(21.35) + i * .06, .22, (-.5, -.2, .2, .5)[i])
+    X.add(X.tick(36), v(36.12), .6)                                                   # باب المطبخ
+    for i in range(3): pop(v(45.36) + i * .11, 96, .28, (-.4, 0, .4)[i])              # رشّة ملح
+    X.add(X.bell(81, 1.0), v(49.04), .25); X.add(X.tick(52), v(51.54), .7)           # الحساب والمفتاح
+    keys(v(57.0), v(58.9))
+    X.add(X.impact(.8), v(59.6), .6)                                                  # تحذير
+    for i in range(4): X.add(X.tick(88 if i % 2 else 83), v(60.5) + i * .16, .45)
+    pop(v(62.14), 79, .4)
+    keys(v(65.8), v(68.9)); keys(v(75.6), v(77.0))
+    X.add(X.bell(91, 1.2), v(77.28), .35)                                             # خلصت
+    X.add(X.impact(.7), v(79.6), .55); ting(v(79.62), .4)
+    w = X.whoosh(.3, True); X.add(w, v(80.6), .3)                                     # إرسال السؤال
+    pop(v(84.52), 88, .35); keys(v(84.7), v(88.2))
+    X.add(X.impact(.9), v(90.4), .65); ting(v(90.45), .35)                            # الجملة الذهبية
+    for tt in (101.4, 102.0, 102.55, 103.1, 103.6): pop(v(tt), 84 + int((tt * 10) % 7), .3)
+    X.add(X.riser(1.4), v(106.98) - 1.4, .4); X.add(X.impact(.8), v(106.98), .55)
+elif day == 2:
+    keys(v(2.1), v(5.8)); X.add(X.impact(.45), v(3.0), .4)                       # جدار الكود + الختم
+    X.add(X.impact(.75), v(8.2), .6); X.add(X.bell(88, 1.2), v(8.64), .35)         # سطر واحد
+    for i in range(3): pop(v(11.6) + i * .15, 86 + i * 3, .3, (-.4, 0, .4)[i])     # 3 قطع
+    X.add(X.bell(84, 1.0), v(12.23), .3)                                            # Prompt
+    X.add(X.impact(.5), v(14.91), .45); X.add(X.tick(45), v(14.91), .6)            # LLM
+    X.add(X.bell(88, 1.0), v(17.61), .3)                                            # Parser
+    for i in range(2): w = X.whoosh(.12, False); X.add(w, v(25.0) + i * .13, .5, (-.3, .3)[i])   # شريط لاصق
+    pop(v(26.14), 84, .35); X.add(X.impact(.6), v(27.31), .55)                      # بس مش مرتّب
+    X.add(X.riser(1.2), v(28.54) - 1.2, .4); X.add(X.impact(.8), v(28.54), .6)     # لانغ تشين
+    for i, m in enumerate([86, 90, 93]): X.add(X.bell(m, 1.2), v(28.6) + i * .06, .2, (-.4, 0, .4)[i])
+    w = X.whoosh(.5, True); X.add(w, v(31.3), .3)                                   # اربطهم بخط
+    for tt, m in ((32.7, 81), (33.74, 84), (34.46, 88)): pop(v(tt), m, .32)        # Prompt | LLM | Parser
+    for tt in (33.48, 34.28): X.add(X.tick(76), v(tt), .6)
+    X.add(X.impact(.85), v(35.95), .6); ting(v(36.0), .35)                          # pipe
+    for i in range(3): pop(v(38.2) + i * .25, 79 + i * 4, .28, (-.4, 0, .4)[i])     # خط الإنتاج
+    pop(v(42.55), 88, .35)                                                          # VS Code
+    keys(v(45.3), v(54.2))                                                          # الكود بينكتب
+    for tt, m in ((47.31, 84), (52.2, 88), (53.7, 91)): pop(v(tt), m, .3)
+    keys(v(56.4), v(57.6)); X.add(X.tick(60), v(57.7), .7)                          # python app.py ⏎
+    for i in range(3): pop(v(60.06) + i * .45, 86 + i * 2, .26)
+    ting(v(61.33), .35)                                                             # 3 نقاط مرتبة
+    pop(v(63.57), 84, .35); X.add(X.impact(.55), v(64.61), .5)                      # اعتذار
+    X.add(X.bell(91, 1.2), v(66.28), .3)                                            # مؤدب زيادة
+    X.add(X.tick(40), v(71.0), .7); ting(v(71.47), .3)                              # invoke → stream
+    keys(v(71.6), v(73.0))
+    pop(v(72.84), 86, .35); X.add(X.impact(.6), v(73.0), .5)                        # أقصر
+    X.add(X.riser(1.4), v(76.23) - 1.4, .45); X.add(X.impact(.9), v(76.23), .65); ting(v(76.28), .35)   # الجملة الذهبية
+    X.add(X.tick(40), v(79.74), .6); pop(v(80.46), 86, .3); X.add(X.impact(.7), v(82.1), .55)
+    pop(v(84.95), 84, .3)                                                           # جيت هَب
+    for tt in (90.2, 90.6, 91.0, 91.4): pop(v(tt), 84 + int((tt * 10) % 7), .3)   # أفكار
+    X.add(X.bell(88, 1.0), v(92.11), .3)
+    X.add(X.tick(52), v(93.9), .7); pop(v(93.92), 79, .35)                          # تابعني
+    X.add(X.riser(1.2), v(94.74) - 1.2, .35); X.add(X.impact(.7), v(94.74), .5)    # بكرة
+    for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(97.78) + i * .06, .2, (-.5, -.2, .2, .5)[i])
 ting(SC['outro'][0] + .25, .5)
 sfx = X.master(END, wet=.18)
 

@@ -10,6 +10,7 @@ import {W, H} from './brand';
 export const Root: React.FC = () => (
   <>
     <Composition id="Voice01" component={VoiceReel} defaultProps={{day: 1}} durationInFrames={voiceFrames(1)} fps={30} width={W} height={H} />
+    <Composition id="Voice02" component={VoiceReel} defaultProps={{day: 2}} durationInFrames={voiceFrames(2)} fps={30} width={W} height={H} />
     <Composition id="Energy00" component={Reel0Energy} durationInFrames={energy0Frames()} fps={30} width={W} height={H} />
     <Composition id="Reel0" component={Reel0} durationInFrames={REEL0_FRAMES} fps={30} width={W} height={H} />
     {Array.from({length: 30}, (_, i) => i + 1).map((n) => (

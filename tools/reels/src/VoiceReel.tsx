@@ -1,84 +1,22 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Easing, Img, Sequence, Solid, interpolate, random, staticFile, useCurrentFrame} from 'remotion';
-import {lightLeak} from '@remotion/effects/light-leak';
+import {AbsoluteFill, Audio, Easing, Img, Sequence, interpolate, random, staticFile, useCurrentFrame} from 'remotion';
+import {Big, Code, FPS, Float, In, Kind, Leak, Pill, Plan, STEP, SceneFC, Slash, Stage, Tile, ltr} from './voiceKit';
+import {S2, KIND2} from './VoiceDay02';
+import V2 from './voiceDay02.json';
 import {GOLD, GOLD_LT, H, INK, Icon, Logo, W, glossy, goldText} from './brand';
 import {BG, Confetti, Flash, Rays, Shake, Shock, Sign, Streaks, clamp, sp} from './EnergyReel';
 import V1 from './voiceDay01.json';
 
 // ريل بصوت محمد: المشاهد والترجمة على توقيت الصوت (بالثواني من voiceDay01.json)
-const FPS = 30;
-type Page = {s: number; e: number; w: [string, number][]};
-type Plan = {off: number; end: number; scenes: [string, number, number][]; pages: Page[]};
-const PLANS: Record<number, Plan> = {1: V1 as any};
+const PLANS: Record<number, Plan> = {1: V1 as any, 2: V2 as any};
 export const voiceFrames = (day: number) => Math.round(PLANS[day].end * FPS);
-const KIND: Record<string, 'dark' | 'sky' | 'gold'> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
+const KIND: Record<string, Kind> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
   recipe: 'sky', step1: 'sky', env: 'dark', warn: 'dark', step2: 'dark', qwen: 'sky', step3: 'dark', chat: 'sky', golden: 'gold', github: 'dark', ask: 'sky', next: 'dark', outro: 'dark'};
 
-// ── أدوات ──
-const ltr: React.CSSProperties = {direction: 'ltr', unicodeBidi: 'isolate'};
-const Stage: React.FC<{children: React.ReactNode}> = ({children}) => (
-  <AbsoluteFill style={{top: 230, height: 1040, bottom: 'auto', alignItems: 'center', justifyContent: 'center', fontFamily: 'Cairo', padding: '0 70px'}}><div style={{transform: 'scale(1.1)', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>{children}</div></AbsoluteFill>
-);
-// ظهور بنابض عند زمن صوتي معيّن (t بالثواني من بداية المشهد)
-const In: React.FC<{at: number; children: React.ReactNode; y?: number; x?: number; rot?: number; style?: React.CSSProperties; pop?: boolean}> = ({at, children, y = 60, x = 0, rot = 0, style, pop}) => {
-  const f = useCurrentFrame(); const s = sp(f - at * FPS, pop ? 9 : 13, pop ? 260 : 180); const k = Math.min(1, s);
-  return <div style={{opacity: Math.min(1, s * 2), transform: `translate(${(1 - s) * x}px,${(1 - s) * y}px) scale(${pop ? 0.3 + 0.7 * s : 1}) rotate(${(1 - k) * rot}deg)`, ...style}}>{children}</div>;
-};
-const Tile: React.FC<{size: number; children: React.ReactNode; r?: number; style?: React.CSSProperties}> = ({size, children, r = 0.28, style}) => (
-  <div style={{...glossy, width: size, height: size, borderRadius: size * r, ...style}}>{children}</div>
-);
-const Pill: React.FC<{children: React.ReactNode; dark?: boolean; size?: number; style?: React.CSSProperties}> = ({children, dark, size = 44, style}) => (
-  <div style={{display: 'inline-flex', alignItems: 'center', gap: 14, fontWeight: 800, fontSize: size, padding: `${size * 0.2}px ${size * 0.75}px`, borderRadius: 99, direction: 'rtl', whiteSpace: 'nowrap',
-    ...(dark ? {background: INK, color: GOLD_LT, border: `3px solid ${GOLD_LT}`} : {background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)', color: INK, border: '3px solid #F6DE9C'}),
-    boxShadow: '0 16px 36px rgba(0,0,0,.28)', ...style}}>{children}</div>
-);
-const Big: React.FC<{children: React.ReactNode; size?: number; color?: string; gold?: boolean; style?: React.CSSProperties}> = ({children, size = 120, color = '#fff', gold, style}) => (
-  <div style={{fontWeight: 800, fontSize: size, lineHeight: 1.25, color, direction: 'rtl', textAlign: 'center', ...(gold ? {...goldText, filter: 'drop-shadow(0 0 30px rgba(232,192,102,.45))'} : {}), ...style}}>{children}</div>
-);
-const Float: React.FC<{children: React.ReactNode; amp?: number; speed?: number}> = ({children, amp = 14, speed = 22}) => {
-  const f = useCurrentFrame();
-  return <div style={{transform: `translateY(${Math.sin(f / speed) * amp}px) rotate(${Math.sin(f / (speed * 1.7)) * 2}deg)`}}>{children}</div>;
-};
-const Slash: React.FC<{at: number; color?: string}> = ({at, color = GOLD_LT}) => {
-  const f = useCurrentFrame(); const p = interpolate(f, [at * FPS, at * FPS + 6], [0, 100], clamp);
-  return <div style={{position: 'absolute', left: '-8%', top: '50%', width: `${p * 1.16}%`, height: 14, background: color, borderRadius: 9, transform: 'rotate(-12deg)', boxShadow: '0 0 20px rgba(0,0,0,.4)'}} />;
-};
-// نافذة كود بتنكتب حرف حرف
-const Code: React.FC<{lines: string[]; from: number; to: number; hl?: string; title?: string}> = ({lines, from, to, hl, title = 'app.py'}) => {
-  const f = useCurrentFrame(); const total = lines.join('').length;
-  let n = Math.floor(interpolate(f, [from * FPS, to * FPS], [0, total], clamp));
-  return (
-    <div style={{width: 940, borderRadius: 30, overflow: 'hidden', background: '#0b0b0b', border: `3px solid ${GOLD}`, boxShadow: '0 0 80px rgba(232,192,102,.25),0 40px 80px rgba(0,0,0,.5)', ...ltr}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 12, padding: '18px 26px', background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)'}}>
-        {[0, 1, 2].map((i) => <div key={i} style={{width: 20, height: 20, borderRadius: '50%', background: INK, opacity: 0.75}} />)}
-        <div style={{marginLeft: 16, fontWeight: 800, fontSize: 26, color: INK}}>{title}</div>
-      </div>
-      <div style={{padding: '28px 30px', fontFamily: 'monospace', fontSize: 31, lineHeight: 1.65, color: '#f3ead2', whiteSpace: 'pre-wrap', wordBreak: 'break-all'}}>
-        {lines.map((l, i) => {
-          const shown = l.slice(0, Math.max(0, n)); n -= l.length; const typing = shown.length > 0 && shown.length < l.length;
-          const parts = hl && shown.includes(hl) ? shown.split(hl) : [shown];
-          return <div key={i} style={{minHeight: 50}}><span style={{color: '#7c6a3e', marginRight: 18}}>{i + 1}</span>
-            {parts.map((p, k) => <React.Fragment key={k}>{k > 0 && <span style={{color: INK, background: GOLD_LT, borderRadius: 6, padding: '0 6px'}}>{hl}</span>}{p}</React.Fragment>)}
-            {typing && <span style={{background: GOLD_LT, color: GOLD_LT}}>_</span>}</div>;
-        })}
-      </div>
-    </div>
-  );
-};
-const Leak: React.FC<{seed?: number; frames?: number}> = ({seed = 0, frames = 40}) => {
-  const f = useCurrentFrame();
-  if (f > frames) return null;
-  return <AbsoluteFill style={{mixBlendMode: 'screen', pointerEvents: 'none'}}>
-    <Solid width={W} height={H} color="#000" effects={[lightLeak({seed, hueShift: 0, progress: interpolate(f, [0, frames], [0, 1], clamp)})]} />
-  </AbsoluteFill>;
-};
-const STEP: React.FC<{n: number; dark?: boolean}> = ({n, dark}) => (
-  <In at={0.05} x={200} y={0}><Pill dark={!dark} size={46}><span>الخطوة</span><span style={ltr}>{n}</span></Pill></In>
-);
 const LINES = ['from huggingface_hub import InferenceClient', '', 'client = InferenceClient("Qwen/Qwen2.5-72B-Instruct")', 'r = client.chat_completion(messages)', 'print(r.choices[0].message.content)'];
 
 // ── المشاهد (t: زمن المشهد بالثواني) ──
-const S: Record<string, React.FC<{t0: number}>> = {
+const S: Record<string, SceneFC> = {
   hook: ({t0}) => {
     const T = (s: number) => s - t0;
     return <Stage>
@@ -323,13 +261,13 @@ const S: Record<string, React.FC<{t0: number}>> = {
 };
 
 // ── الترجمة الحيّة: كلمة كلمة، والكلمة الحالية ذهبية ──
-const Captions: React.FC<{plan: Plan}> = ({plan}) => {
+const Captions: React.FC<{plan: Plan; kinds: Record<string, Kind>}> = ({plan, kinds}) => {
   const f = useCurrentFrame(); const now = f / FPS - plan.off;
   const sc = plan.scenes.find(([, a, b]) => now >= a && now < b)?.[0] ?? 'hook';
   if (sc === 'outro') return null;
   const page = plan.pages.find((p) => now >= p.s - 0.05 && now < p.e + 0.12);
   if (!page) return null;
-  const dark = KIND[sc] === 'dark'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);
+  const dark = kinds[sc] === 'dark'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);
   return (
     <div style={{position: 'absolute', top: 1300, left: 60, right: 60, display: 'flex', justifyContent: 'center', fontFamily: 'Cairo', pointerEvents: 'none'}}>
       <div dir="rtl" lang="ar" style={{textAlign: 'center', fontWeight: 800, fontSize: 76, lineHeight: 1.35, transform: `scale(${0.85 + 0.15 * Math.min(1, s)})`, opacity: Math.min(1, s * 2),
@@ -371,13 +309,16 @@ const Opening: React.FC = () => {
   </AbsoluteFill>;
 };
 
+const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2};
+const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2};
+
 export const VoiceReel: React.FC<{day: number}> = ({day}) => {
-  const P = PLANS[day]; const total = voiceFrames(day); const nn = String(day).padStart(2, '0');
+  const P = PLANS[day]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day); const nn = String(day).padStart(2, '0');
   return (
     <AbsoluteFill style={{background: '#000', fontFamily: 'Cairo'}}>
       {P.scenes.map(([k, a, b]) => {
         const from = Math.round((a + P.off) * FPS) + (k === 'hook' ? -Math.round(P.off * FPS) : 0); const to = Math.round((b + P.off) * FPS);
-        const Sc = S[k]; const kind = KIND[k];
+        const Sc = SC[k]; const kind = KD[k];
         return <Sequence key={k} name={k} from={from} durationInFrames={to - from}>
           <BG kind={kind} />{kind === 'dark' ? <Streaks dark /> : null}
           <Sc t0={k === 'hook' ? -P.off : a} />
@@ -385,7 +326,7 @@ export const VoiceReel: React.FC<{day: number}> = ({day}) => {
           {['four', 'hf', 'golden', 'warn'].includes(k) ? <Shock y="40%" color={kind === 'gold' ? INK : GOLD_LT} /> : null}
         </Sequence>;
       })}
-      <Captions plan={P} />
+      <Captions plan={P} kinds={KD} />
       <Top day={day} total={total} />
       <Opening />
       <Audio src={staticFile(`audio/voice/day-${nn}-mix.wav`)} />

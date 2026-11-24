@@ -9,15 +9,21 @@ from scipy.signal import resample_poly
 from synth import Track, SR, lp, hp, hz, t, env
 
 HERE = os.path.dirname(os.path.abspath(__file__)); REELS = os.path.join(HERE, '..')
-day = int(sys.argv[1]) if sys.argv[1:] else 1
-P = json.load(open(os.path.join(REELS, 'src', f'voiceDay{day:02d}.json'), encoding='utf-8'))
+arg = sys.argv[1] if sys.argv[1:] else '1'
+day = int(arg.rstrip('s')); variant = 's' if arg.endswith('s') else ''   # 2s = نسخة الترند القصيرة
+NN = f'{day:02d}{variant}'
+P = json.load(open(os.path.join(REELS, 'src', f'voiceDay{NN}.json'), encoding='utf-8'))
 OFF, END = P['off'], P['end']
-SC = {k: (a + OFF, b + OFF) for k, a, b in P['scenes']}
-v = lambda s: s + OFF                                      # من زمن الصوت لزمن الفيديو
+SC = {sc[0]: (sc[1] + OFF, sc[2] + OFF) for sc in P['scenes']}
+def v(s):                                                 # من زمن الصوت الأصلي لزمن الفيديو
+    if 'segments' not in P: return s + OFF
+    for a, b, n in P['segments']:                          # النسخة القصيرة: المؤثرات خارج المقاطع بتنشال
+        if a - 1e-6 <= s < b: return n + (s - a) + OFF
+    return -100.0
 INTRO_END = P['scenes'][1][1] + OFF                       # الإيقاع بيدخل بعد ثاني مشهد (الخطّاف)
 
 # ── الصوت ──
-sr, vo = wavfile.read(os.path.join(REELS, 'public', 'audio', 'voice', f'day-{day:02d}-voice.wav'))
+sr, vo = wavfile.read(os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-voice.wav'))
 vo = vo.astype(np.float64) / (32768 if vo.dtype == np.int16 else 1)
 if vo.ndim > 1: vo = vo.mean(1)
 if sr != SR: vo = resample_poly(vo, SR, sr)
@@ -128,8 +134,8 @@ sfx = X.master(END, wet=.18)
 L = min(len(music), len(sfx), len(voice))
 mix = voice[:L, None] * 1.0 + music[:L] * .30 + sfx[:L] * .55
 mix = mix / (np.max(np.abs(mix)) + 1e-9) * .89
-tmp = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{day:02d}-mix-pre.wav')
-out = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{day:02d}-mix.wav')
+tmp = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-mix-pre.wav')
+out = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-mix.wav')
 wavfile.write(tmp, SR, (mix * 32767).astype(np.int16))
 subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', tmp, '-af', 'loudnorm=I=-14:TP=-1.2:LRA=9', '-ar', '48000', out], check=True)
 os.remove(tmp)

@@ -68,3 +68,29 @@ ffmpeg -i out/day-08.mp4 -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -c:a
 python3 scripts/gen-energy.py 8            # الخطة الإيقاعية (src/energyPlan.json) والموسيقى
 npx remotion render src/index.ts Energy08 out/energy-08.mp4
 ```
+
+## ريلز الصوت «برو» (من اليوم 2)
+نفس `VoiceReel` تبع اليوم الأول، وفوقه طبقة `src/voicePro.tsx` بتنفعّل بـ `"pro": true` بملف الخطة (`src/voiceDayNN.json`):
+- دخول كل مشهد بـ `zoomBlur` + `chromaticAberration` من `@remotion/effects` (داخل `HtmlInCanvas`)، بيخفّوا خلال 9 إطارات.
+- ضربات كاميرا على اللحظات القوية (`hits` بالخطة، بزمن الصوت): زووم سريع وانزياح ألوان.
+- وهج ذهبي بينبض مع البيس (`useWindowedAudioData` + `visualizeAudio` من `@remotion/media-utils`).
+- حبيبات فيلم خفيفة (`public/fx/grain-*.png`).
+
+مشاهد كل يوم بملف لحاله (`src/VoiceDay02.tsx`)، والأدوات المشتركة بـ `src/voiceKit.tsx`.
+
+### نسخة الترند القصيرة (~45 ثانية)
+`scripts/make-short.py` بيقص مقاطع من الصوت على حدود المشاهد (القائمة `CUTS` جوّا السكربت) وبيعيد توقيت المشاهد والكابشن والمؤثرات.
+```bash
+python3 scripts/make-short.py 2          # src/voiceDay02s.json + day-02s-voice.wav
+python3 scripts/gen-voice-mix.py 2       # المزج الكامل
+python3 scripts/gen-voice-mix.py 2s      # مزج النسخة القصيرة
+```
+
+### الرندر
+`HtmlInCanvas` بيحتاج متصفح Remotion نفسه (chrome-headless-shell) مع `--gl=swangle` (بدون GPU):
+```bash
+npx remotion browser ensure     # أو نزّله يدويًا من remotion.media
+npx remotion render src/index.ts Voice02 out/voice-02.mp4 --gl=swangle
+npx remotion render src/index.ts Voice02Short out/voice-02s.mp4 --gl=swangle
+ffmpeg -i out/voice-02.mp4 -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart day-02-ig.mp4
+```

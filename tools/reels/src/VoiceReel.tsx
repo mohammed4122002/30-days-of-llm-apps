@@ -3,13 +3,18 @@ import {AbsoluteFill, Audio, Easing, Img, Sequence, interpolate, random, staticF
 import {Big, Code, FPS, Float, In, Kind, Leak, Pill, Plan, STEP, SceneFC, Slash, Stage, Tile, ltr} from './voiceKit';
 import {S2, KIND2} from './VoiceDay02';
 import V2 from './voiceDay02.json';
+import V2S from './voiceDay02s.json';
+import {BassGlow, Grain, ProFx} from './voicePro';
 import {GOLD, GOLD_LT, H, INK, Icon, Logo, W, glossy, goldText} from './brand';
 import {BG, Confetti, Flash, Rays, Shake, Shock, Sign, Streaks, clamp, sp} from './EnergyReel';
 import V1 from './voiceDay01.json';
 
 // ريل بصوت محمد: المشاهد والترجمة على توقيت الصوت (بالثواني من voiceDay01.json)
-const PLANS: Record<number, Plan> = {1: V1 as any, 2: V2 as any};
-export const voiceFrames = (day: number) => Math.round(PLANS[day].end * FPS);
+// مفتاح الخطة: رقم اليوم + نسخة اختيارية ('s' = نسخة الترند القصيرة)
+type FullPlan = Plan & {pro?: boolean; hits?: number[]};
+const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any};
+const pid = (day: number, variant = '') => `${day}${variant}`;
+export const voiceFrames = (day: number, variant = '') => Math.round(PLANS[pid(day, variant)].end * FPS);
 const KIND: Record<string, Kind> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
   recipe: 'sky', step1: 'sky', env: 'dark', warn: 'dark', step2: 'dark', qwen: 'sky', step3: 'dark', chat: 'sky', golden: 'gold', github: 'dark', ask: 'sky', next: 'dark', outro: 'dark'};
 
@@ -312,24 +317,28 @@ const Opening: React.FC = () => {
 const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2};
 const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2};
 
-export const VoiceReel: React.FC<{day: number}> = ({day}) => {
-  const P = PLANS[day]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day); const nn = String(day).padStart(2, '0');
+export const VoiceReel: React.FC<{day: number; variant?: string}> = ({day, variant = ''}) => {
+  const P = PLANS[pid(day, variant)]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day, variant); const nn = String(day).padStart(2, '0');
+  const mix = `audio/voice/day-${nn}${variant}-mix.wav`;
+  const scenes = P.scenes.map((sc) => {
+    const [k, a, b] = sc; const t0 = (sc as any)[3] ?? a;   // t0 = بداية المشهد بزمن الصوت الأصلي (للنسخة القصيرة)
+    const from = Math.round((a + P.off) * FPS) + (k === 'hook' ? -Math.round(P.off * FPS) : 0); const to = Math.round((b + P.off) * FPS);
+    const Sc = SC[k]; const kind = KD[k];
+    return <Sequence key={k} name={k} from={from} durationInFrames={to - from}>
+      <BG kind={kind} />{kind === 'dark' ? <Streaks dark /> : null}
+      <Sc t0={k === 'hook' ? t0 - P.off : t0} />
+      {k !== 'hook' && k !== 'outro' ? <Flash frames={4} color={kind === 'dark' ? '#E8C066' : '#FFF6DA'} /> : null}
+      {['four', 'hf', 'golden', 'warn', 'one', 'pipe'].includes(k) ? <Shock y="40%" color={kind === 'gold' ? INK : GOLD_LT} /> : null}
+    </Sequence>;
+  });
   return (
     <AbsoluteFill style={{background: '#000', fontFamily: 'Cairo'}}>
-      {P.scenes.map(([k, a, b]) => {
-        const from = Math.round((a + P.off) * FPS) + (k === 'hook' ? -Math.round(P.off * FPS) : 0); const to = Math.round((b + P.off) * FPS);
-        const Sc = SC[k]; const kind = KD[k];
-        return <Sequence key={k} name={k} from={from} durationInFrames={to - from}>
-          <BG kind={kind} />{kind === 'dark' ? <Streaks dark /> : null}
-          <Sc t0={k === 'hook' ? -P.off : a} />
-          {k !== 'hook' && k !== 'outro' ? <Flash frames={4} color={kind === 'dark' ? '#E8C066' : '#FFF6DA'} /> : null}
-          {['four', 'hf', 'golden', 'warn'].includes(k) ? <Shock y="40%" color={kind === 'gold' ? INK : GOLD_LT} /> : null}
-        </Sequence>;
-      })}
+      {P.pro ? <ProFx plan={P}>{scenes}<BassGlow src={mix} /></ProFx> : scenes}
       <Captions plan={P} kinds={KD} />
       <Top day={day} total={total} />
       <Opening />
-      <Audio src={staticFile(`audio/voice/day-${nn}-mix.wav`)} />
+      {P.pro ? <Grain /> : null}
+      <Audio src={staticFile(mix)} />
     </AbsoluteFill>
   );
 };

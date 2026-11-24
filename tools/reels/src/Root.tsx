@@ -1,5 +1,6 @@
 import React from 'react';
-import {Composition} from 'remotion';
+import {Composition, Still} from 'remotion';
+import {Cover02} from './Cover02';
 import {Reel0, REEL0_FRAMES} from './Reel0';
 import {DayReel, dayFrames} from './DayReel';
 import {EnergyReel, energyFrames} from './EnergyReel';
@@ -9,6 +10,7 @@ import {W, H} from './brand';
 
 export const Root: React.FC = () => (
   <>
+    <Still id="Cover02" component={Cover02} width={W} height={H} />
     <Composition id="Voice01" component={VoiceReel} defaultProps={{day: 1}} durationInFrames={voiceFrames(1)} fps={30} width={W} height={H} />
     <Composition id="Voice02" component={VoiceReel} defaultProps={{day: 2}} durationInFrames={voiceFrames(2)} fps={30} width={W} height={H} />
     <Composition id="Voice02Short" component={VoiceReel} defaultProps={{day: 2, variant: 's'}} durationInFrames={voiceFrames(2, 's')} fps={30} width={W} height={H} />

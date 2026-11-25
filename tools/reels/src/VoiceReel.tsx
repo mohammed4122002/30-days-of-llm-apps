@@ -272,7 +272,7 @@ const S: Record<string, SceneFC> = {
 const Captions: React.FC<{plan: Plan; kinds: Record<string, Kind>}> = ({plan, kinds}) => {
   const f = useCurrentFrame(); const now = f / FPS - plan.off;
   const sc = plan.scenes.find(([, a, b]) => now >= a && now < b)?.[0] ?? 'hook';
-  if (sc === 'outro') return null;
+  if (sc === 'outro' || ((plan as any).nocap ?? []).includes(sc)) return null;   // nocap: المشهد بيعرض النص نفسه
   const page = plan.pages.find((p) => now >= p.s - 0.05 && now < p.e + 0.12);
   if (!page) return null;
   const dark = kinds[sc] === 'dark'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);

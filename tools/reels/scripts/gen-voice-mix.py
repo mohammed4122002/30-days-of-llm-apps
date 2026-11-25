@@ -127,6 +127,36 @@ elif day == 2:
     X.add(X.tick(52), v(93.9), .7); pop(v(93.92), 79, .35)                          # تابعني
     X.add(X.riser(1.2), v(94.74) - 1.2, .35); X.add(X.impact(.7), v(94.74), .5)    # بكرة
     for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(97.78) + i * .06, .2, (-.5, -.2, .2, .5)[i])
+elif day == 3:
+    pop(v(0.4), 81, .3); pop(v(1.86), 84, .3)                                       # نفس النموذج / نفس الكود
+    X.add(X.impact(.6), v(3.37), .5); X.add(X.bell(88, 1.2), v(3.86), .3)          # 3 لهجات
+    for tt, m in ((4.45, 84), (5.45, 88), (6.27, 91)): pop(v(tt), m, .34)          # فلسطيني شامي مصري
+    for i in range(3): X.add(X.tick(70 + i * 3), v(8.08) + i * .12, .55)
+    X.add(X.impact(.85), v(9.1), .65); ting(v(9.15), .3)                            # كلهم مصري!
+    for tt, m in ((10.86, 84), (11.19, 88), (11.98, 91)): pop(v(tt), m, .3)        # أساليب
+    for tt, m in ((15.41, 79), (16.09, 83), (16.59, 86)): pop(v(tt), m, .34)       # 3 نسخ
+    X.add(X.impact(.7), v(18.48), .55)                                              # تعب على الفاضي
+    X.add(X.riser(1.2), v(21.47) - 1.2, .4); X.add(X.impact(.8), v(21.47), .6); ting(v(21.5), .3)   # Prompt Template
+    X.add(X.bell(91, 1.2), v(23.48), .3)                                            # = قالب
+    for tt in (30.0, 30.72, 31.53): pop(v(tt), 86 + int(tt) % 5, .34); X.add(X.tick(80), v(tt), .4)   # تعبئة الفراغات
+    pop(v(36.49), 88, .35)                                                          # VS Code
+    keys(v(37.6), v(44.8))                                                          # كتابة القالب
+    pop(v(38.55), 84, .3); pop(v(41.97), 88, .3)
+    for tt in (46.08, 47.17): w = X.whoosh(.3, True); X.add(w, v(tt) - .25, .3)    # الأمثلة
+    X.add(X.impact(.6), v(49.08), .5); ting(v(49.1), .3)                            # Few-shot
+    keys(v(54.7), v(55.9)); X.add(X.tick(60), v(56.0), .7)                          # python app.py ⏎
+    for tt in (56.36, 59.39, 60.9): pop(v(tt), 86, .28)
+    X.add(X.impact(.55), v(57.73), .5); X.add(X.impact(.55), v(60.59), .5)          # الختمين
+    X.add(X.impact(.9), v(64.03), .65); ting(v(64.1), .35)                          # طلع مصري
+    X.add(X.riser(1.3), v(65.37) - 1.3, .45); X.add(X.impact(.9), v(65.37), .6)    # الخلاصة
+    X.add(X.bell(91, 1.0), v(67.56), .3); X.add(X.tick(40), v(69.31), .6)
+    X.add(X.riser(1.0), v(78.56) - 1.0, .35); X.add(X.impact(.8), v(78.56), .55)   # نموذج أكبر
+    pop(v(80.31), 84, .3)                                                           # جيت هَب
+    for tt in (84.6, 84.95, 85.3, 85.65): pop(v(tt), 84 + int((tt * 10) % 7), .3)  # لهجات تانية
+    X.add(X.bell(88, 1.0), v(86.41), .3)
+    X.add(X.tick(52), v(88.3), .7); pop(v(88.32), 79, .35)                          # تابعني
+    X.add(X.riser(1.0), v(89.38) - 1.0, .3); X.add(X.impact(.7), v(89.38), .5)     # بكرة
+    for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(92.3) + i * .06, .2, (-.5, -.2, .2, .5)[i])
 ting(SC['outro'][0] + .25, .5)
 sfx = X.master(END, wet=.18)
 

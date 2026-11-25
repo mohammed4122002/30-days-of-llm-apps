@@ -43,7 +43,7 @@ const PieceTile: React.FC<{icon: string; en: string; ar: string; size?: number; 
 );
 
 // شاشة تيرمنال
-const Term: React.FC<{children: React.ReactNode; title?: string}> = ({children, title = 'Terminal'}) => (
+export const Term: React.FC<{children: React.ReactNode; title?: string}> = ({children, title = 'Terminal'}) => (
   <div style={{width: 940, borderRadius: 30, overflow: 'hidden', background: '#0b0b0b', border: `3px solid ${GOLD}`, boxShadow: '0 0 80px rgba(232,192,102,.25),0 40px 80px rgba(0,0,0,.5)'}}>
     <div style={{display: 'flex', alignItems: 'center', gap: 12, padding: '18px 26px', background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)', ...ltr}}>
       {[0, 1, 2].map((i) => <div key={i} style={{width: 20, height: 20, borderRadius: '50%', background: INK, opacity: 0.75}} />)}
@@ -55,7 +55,7 @@ const Term: React.FC<{children: React.ReactNode; title?: string}> = ({children, 
 );
 
 // ختم مائل (للنكت)
-const Stamp: React.FC<{children: React.ReactNode; rot?: number; size?: number}> = ({children, rot = -5, size = 70}) => (
+export const Stamp: React.FC<{children: React.ReactNode; rot?: number; size?: number}> = ({children, rot = -5, size = 70}) => (
   <div style={{transform: `rotate(${rot}deg)`, background: '#fff', color: INK, fontWeight: 800, fontSize: size, padding: '12px 44px', borderRadius: 18,
     border: `6px solid ${INK}`, boxShadow: `10px 10px 0 ${GOLD_LT}`, direction: 'rtl', whiteSpace: 'nowrap'}}>{children}</div>
 );

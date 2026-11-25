@@ -1,6 +1,6 @@
 // أغلفة الريلز (1080×1920): day-XX/reel-cover.jpg و announcements/day-00-bridge/reel-cover.jpg
 // المحتوى المهم بالوسط (1080×1440) لأنه شبكة حساب إنستغرام بتقص الأطراف.
-// الأيام الفردية داكنة، الزوجية سماء، والمحطات (كل 5 أيام) ذهبية، فالشبكة بتطلع متناسقة.
+// الأيام الفردية داكنة، الزوجية (ومعها اليوم 0) سماء، والمحطات (كل 5 أيام) ذهبية، فالشبكة بتطلع متناسقة.
 // الاستخدام: FONTS_DIR=... ICONS_DIR=... NODE_PATH=<playwright> node tools/render_reel_covers.js [يوم]
 const {chromium}=require('playwright');const fs=require('fs');const path=require('path');
 const {STYLE,V3CSS,ic,logo,PORTRAIT,DAY_ICON,DAY_LOGOS}=require('./render_carousel.js');
@@ -68,10 +68,10 @@ function cover(n){
   </div>
   <div class="series">30 DAYS OF LLM APPS<b>•</b>MOHAMMED ABU SAADA</div></div>`;
 }
-function cover0(){
-  return `<div class="cov dark"><div class="rays"></div><div class="in">
+function cover0(){   // لايت عشان الشبكة تتبادل: الصفر لايت، 1 داكن، 2 لايت…
+  return `<div class="cov sky"><div class="rays"></div><div class="in">
     <div class="phase">التحدي الجديد</div>
-    <div class="bign" style="font-size:300px;margin-top:20px">30</div>
+    <div class="bign" style="font-size:300px;margin-top:20px;background:linear-gradient(150deg,#FFF1C4,#E8C066 45%,#C9A24B 70%,#8F6A1F);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 6px 14px rgba(143,106,31,.35))">30</div>
     <div class="ttl" style="font-size:96px;margin-top:10px"><div class="ln">يوم انتهت.</div><div class="ln"><span>والجاية أكبر.</span></div></div>
     <div class="bottom">
       <div class="tile">${logo('n8n',96,'gold')}</div>

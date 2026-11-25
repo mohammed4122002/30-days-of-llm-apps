@@ -34,6 +34,8 @@ export const COVERS: Record<number, CoverData> = {
     pieces: [['chat-text', 'Prompt'], ['brain', 'LLM'], ['list-checks', 'Parser']], sep: 'bar'},
   3: {day: 3, dark: true, phase: 'أسبوع الأساسيات', logo: 'langchain', logoLabel: 'Prompt Template', line1: 'طلبت 3 لهجات…', pre: 'طلعوا', hl: 'كلهم مصري', post: '!',
     pieces: [['chat-circle-text', 'فلسطيني'], ['chat-circle-text', 'شامي'], ['chat-circle-text', 'مصري']], sep: 'none'},
+  4: {day: 4, dark: false, phase: 'أسبوع الأساسيات', logo: 'pydantic', logoLabel: 'Pydantic', line1: 'سألت عن رقم…', pre: 'جاوبني', hl: 'بفقرة كاملة', post: '!',
+    pieces: [['chat-teardrop-text', 'حكي'], ['brackets-curly', 'Schema'], ['table', 'بيانات']], sep: 'none'},
 };
 
 export const ReelCover: React.FC<{day: number}> = ({day}) => {
@@ -60,7 +62,7 @@ export const ReelCover: React.FC<{day: number}> = ({day}) => {
 
       <div style={{direction: 'rtl', textAlign: 'center', fontWeight: 800, color: fg, marginTop: 18}}>
         <div style={{fontSize: 96, lineHeight: 1.25}}>{c.line1}</div>
-        <div style={{display: 'inline-flex', alignItems: 'center', gap: 22, fontSize: 104, lineHeight: 1.2, marginTop: 10}}>
+        <div style={{display: 'inline-flex', alignItems: 'center', gap: 22, fontSize: (c.pre + c.hl + c.post).length > 14 ? 88 : 104, lineHeight: 1.2, marginTop: 10}}>
           <span>{c.pre}</span>
           <span style={{borderRadius: 26, padding: '2px 34px 14px', ...(dk ? {background: 'linear-gradient(150deg,#F6DE9C,#E8C066 50%,#C9A24B)', color: INK} : {background: INK, boxShadow: `0 18px 40px rgba(30,20,5,.3), 0 0 0 4px ${GOLD_LT}`})}}>
             <span style={dk ? {} : goldText}>{c.hl}</span></span>

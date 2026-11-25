@@ -7,6 +7,9 @@ import V2S from './voiceDay02s.json';
 import {S3, KIND3} from './VoiceDay03';
 import V3 from './voiceDay03.json';
 import V3S from './voiceDay03s.json';
+import {S4, KIND4} from './VoiceDay04';
+import V4 from './voiceDay04.json';
+import V4S from './voiceDay04s.json';
 import {BassGlow, Grain, ProFx} from './voicePro';
 import {GOLD, GOLD_LT, H, INK, Icon, Logo, W, glossy, goldText} from './brand';
 import {BG, Confetti, Flash, Rays, Shake, Shock, Sign, Streaks, clamp, sp} from './EnergyReel';
@@ -15,7 +18,7 @@ import V1 from './voiceDay01.json';
 // ريل بصوت محمد: المشاهد والترجمة على توقيت الصوت (بالثواني من voiceDay01.json)
 // مفتاح الخطة: رقم اليوم + نسخة اختيارية ('s' = نسخة الترند القصيرة)
 type FullPlan = Plan & {pro?: boolean; hits?: number[]};
-const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any};
+const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any, '4': V4 as any, '4s': V4S as any};
 const pid = (day: number, variant = '') => `${day}${variant}`;
 export const voiceFrames = (day: number, variant = '') => Math.round(PLANS[pid(day, variant)].end * FPS);
 const KIND: Record<string, Kind> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
@@ -317,8 +320,8 @@ const Opening: React.FC = () => {
   </AbsoluteFill>;
 };
 
-const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3};
-const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3};
+const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3, 4: S4};
+const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3, 4: KIND4};
 
 export const VoiceReel: React.FC<{day: number; variant?: string}> = ({day, variant = ''}) => {
   const P = PLANS[pid(day, variant)]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day, variant); const nn = String(day).padStart(2, '0');

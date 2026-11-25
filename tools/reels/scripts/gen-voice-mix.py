@@ -20,7 +20,8 @@ def v(s):                                                 # من زمن الصو
     for a, b, n in P['segments']:                          # النسخة القصيرة: المؤثرات خارج المقاطع بتنشال
         if a - 1e-6 <= s < b: return n + (s - a) + OFF
     return -100.0
-INTRO_END = P['scenes'][1][1] + OFF                       # الإيقاع بيدخل بعد ثاني مشهد (الخطّاف)
+INTRO_END = P['scenes'][1][1] + OFF
+SOFT = P.get('sound') == 'soft'                           # ملف صوت ناعم: موسيقى أهدى ومؤثرات أقل وأنعم                       # الإيقاع بيدخل بعد ثاني مشهد (الخطّاف)
 
 # ── الصوت ──
 sr, vo = wavfile.read(os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-voice.wav'))
@@ -40,24 +41,29 @@ for q in range(nb):
     at = q * BEAT; bar = q // 4; ch = PROG[bar % 4]; root = ROOTS[bar % 4]
     intro = at < INTRO_END; outro = at > SC['outro'][0] + .3
     if not outro:
-        if q % 2 == 0 and not intro: T.add(T.kick(.75), at, .8)
-        if q % 2 == 1 and not intro: T.add(T.clap(), at, .45, .1)
-        T.add(T.hat(), at + BEAT / 2, .45, .3)
-        if q % 4 == 3: T.add(T.hat(True), at + 3 * BEAT / 4, .35, -.3)
-        if not intro: T.add(T.pluck(root, .5, .2, .7), at, .55)
+        if SOFT:   # كيك ناعم ببداية كل مازورة، وبدون تصفيق، وهاي هات خفيف، وبيانو بدل النقر
+            if q % 4 == 0 and not intro: T.add(T.kick(.45), at, .5)
+            T.add(T.hat(), at + BEAT / 2, .18, .3)
+            if not intro and q % 2 == 0: T.add(T.piano(root + 12, 1.6), at, .32, -.15)
+        else:
+            if q % 2 == 0 and not intro: T.add(T.kick(.75), at, .8)
+            if q % 2 == 1 and not intro: T.add(T.clap(), at, .45, .1)
+            T.add(T.hat(), at + BEAT / 2, .45, .3)
+            if q % 4 == 3: T.add(T.hat(True), at + 3 * BEAT / 4, .35, -.3)
+            if not intro: T.add(T.pluck(root, .5, .2, .7), at, .55)
     if q % 4 == 0:
         p = T.pad(ch + [ch[0] + 12], BEAT * 4.2, 1800 if intro else 2600)
         k = int(at * SR); bed[k:k + len(p)] += p[: T.n - k]
     if not intro and not outro and (bar % 2 == 1):
         seq = [ch[0] + 12, ch[2] + 12, ch[1] + 24, ch[2] + 12]
-        T.add(T.pluck(seq[q % 4], .35, .12, 1.0), at + BEAT / 2, .16, .4 if q % 2 else -.4)
+        T.add(T.pluck(seq[q % 4], .35, .12, .6 if SOFT else 1.0), at + BEAT / 2, .09 if SOFT else .16, .4 if q % 2 else -.4)
 T.L += bed * .7; T.R += bed * .7
 music = T.master(END, wet=.25)
 
 # ── ducking: الموسيقى بتنزل لما محمد يحكي ──
 win = int(.03 * SR); e = np.sqrt(np.convolve(voice ** 2, np.ones(win) / win, 'same'))
 e = np.convolve(e, np.ones(int(.25 * SR)) / int(.25 * SR), 'same'); e = e / (e.max() + 1e-9)
-duck = 1 - .62 * np.clip(e * 3.5, 0, 1)
+duck = 1 - (.72 if SOFT else .62) * np.clip(e * 3.5, 0, 1)
 music *= duck[: len(music), None] if len(duck) >= len(music) else np.pad(duck, (0, len(music) - len(duck)), constant_values=1)[:, None]
 
 # ── المؤثرات ──
@@ -69,8 +75,10 @@ def keys(a, b):
     tt = a
     while tt < b: X.add(X.key(), tt, .32, X.rng.uniform(-.4, .4)); tt += X.rng.uniform(.045, .09)
 for k, (a, b) in SC.items():
-    if k not in ('hook',): w = X.whoosh(.35, True); X.add(w, a - .33, .32, -.3); X.add(w, a - .33, .32, .3)
-ting(OFF, .45); X.add(X.impact(.6), OFF, .55)
+    if k not in ('hook',):
+        if SOFT: w = lp(X.whoosh(.6, True), 3500); X.add(w, a - .55, .16, -.3); X.add(w, a - .55, .16, .3)   # نسمة ناعمة
+        else: w = X.whoosh(.35, True); X.add(w, a - .33, .32, -.3); X.add(w, a - .33, .32, .3)
+ting(OFF, .3 if SOFT else .45); X.add(lp(X.impact(.6), 300) if SOFT else X.impact(.6), OFF, .35 if SOFT else .55)
 if day == 1:
     X.add(X.impact(.7), v(6.14), .6); X.add(X.bell(88, 1.2), v(7.94), .35)          # أربع سطور
     keys(v(6.4), v(9.4))
@@ -163,12 +171,42 @@ elif day == 3:   # النسخة 2 (سكريبت مدقق)
     X.add(X.tick(52), v(116.5), .7); pop(v(116.52), 79, .35)                        # تابعني
     X.add(X.riser(1.0), v(117.11) - 1.0, .3); X.add(X.impact(.7), v(117.11), .5)   # بكرة
     for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(120.09) + i * .06, .2, (-.5, -.2, .2, .5)[i])
+elif day == 4:   # ملف صوت ناعم: أجراس ونغمات خفيفة بس باللحظات المهمة
+    def soft_hit(at, g=.3): X.add(lp(X.impact(.5), 220), at, g)                       # دقة ناعمة واطية (بدون صدمة)
+    def chime(at, m=88, g=.22): X.add(X.bell(m, 1.4), at, g)
+    def note(at, m=84, g=.2, pan=0): X.add(X.pluck(m, .35, .14, .45), at, g, pan)
+    chime(v(2.07), 86)                                                                # ؟ على المبلغ
+    note(v(5.83), 79, .16)                                                            # "شكرًا على سؤالك"
+    soft_hit(v(10.23), .35); chime(v(10.25), 93, .25)                                 # 1250.5
+    for i in range(5): note(v(12.6) + i * .35, 79 + i * 2, .1, (-.4, -.2, 0, .2, .4)[i])   # الإيميلات بتوصل
+    chime(v(15.87), 84, .18)                                                          # Excel
+    for tt, m in ((17.28, 81), (18.31, 84), (19.46, 88)): note(v(tt), m, .16)       # أعمدة الجدول
+    soft_hit(v(25.64), .28)                                                           # الحكي ما بينحط
+    chime(v(31.92), 88, .2)                                                           # الشكل الثابت
+    soft_hit(v(36.37), .3); chime(v(36.4), 93, .22)                                   # Schema
+    note(v(41.8), 84, .15); note(v(43.68), 88, .15)                                   # خانات الاستمارة
+    chime(v(51.33), 86, .16)                                                          # VS Code
+    for tt, m in ((59.25, 81), (60.16, 84), (61.4, 88)): note(v(tt), m, .15)        # str float str
+    chime(v(64.45), 91, .16)                                                          # Parser
+    w = lp(X.whoosh(1.2, True), 2500); X.add(w, v(66.2), .12)                         # التعليمات بتنكتب لحالها
+    chime(v(74.27), 88, .18)                                                          # 1250.5 بالنص
+    note(v(77.9), 76, .18)                                                            # ⏎
+    chime(v(81.52), 88, .22); chime(v(89.94), 91, .22)                                # ✓ ✓
+    soft_hit(v(92.37), .38); X.add(X.bell(79, 1.8), v(92.4), .2)                      # '-dollar'
+    chime(v(102.25), 86, .2); chime(v(104.41), 81, .18)                               # الشكل مضمون / الصح لا
+    for tt, m in ((112.89, 84), (114.06, 88), (115.11, 91)): note(v(tt), m, .16)    # USD EUR ILS
+    soft_hit(v(119.2), .32)                                                           # البارسر رفضه
+    X.add(X.riser(1.2) * .5, v(121.52) - 1.2, .25); chime(v(121.55), 93, .25)        # الخلاصة
+    chime(v(126.62), 88, .2)                                                          # بيانات
+    for tt, m in ((137.81, 84), (138.98, 88), (140.21, 91)): note(v(tt), m, .16)    # فواتير، سير، إيميلات
+    note(v(144.6), 79, .2); chime(v(145.71), 88, .2)                                  # تابعني / بكرة
+    for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.4), v(148.3) + i * .07, .13, (-.5, -.2, .2, .5)[i])
 ting(SC['outro'][0] + .25, .5)
 sfx = X.master(END, wet=.18)
 
 # ── الماستر ──
 L = min(len(music), len(sfx), len(voice))
-mix = voice[:L, None] * 1.0 + music[:L] * .30 + sfx[:L] * .55
+mix = voice[:L, None] * 1.0 + music[:L] * (.26 if SOFT else .30) + sfx[:L] * (.42 if SOFT else .55)
 mix = mix / (np.max(np.abs(mix)) + 1e-9) * .89
 tmp = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-mix-pre.wav')
 out = os.path.join(REELS, 'public', 'audio', 'voice', f'day-{NN}-mix.wav')

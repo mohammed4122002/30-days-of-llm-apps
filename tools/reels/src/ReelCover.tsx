@@ -36,6 +36,8 @@ export const COVERS: Record<number, CoverData> = {
     pieces: [['chat-circle-text', 'فلسطيني'], ['chat-circle-text', 'شامي'], ['chat-circle-text', 'مصري']], sep: 'none'},
   4: {day: 4, dark: false, phase: 'أسبوع الأساسيات', logo: 'pydantic', logoLabel: 'Pydantic', line1: 'سألت عن رقم…', pre: 'جاوبني', hl: 'بفقرة كاملة', post: '!',
     pieces: [['chat-teardrop-text', 'حكي'], ['brackets-curly', 'Schema'], ['table', 'بيانات']], sep: 'none'},
+  5: {day: 5, dark: true, phase: 'أسبوع الأساسيات', logo: 'langchain', logoLabel: 'Chat Memory', line1: 'البوت ما بيتذكرك…', pre: 'إلا', hl: 'بالدفتر', post: '!',
+    pieces: [['robot', 'النموذج'], ['bookmark-simple', 'الدفتر'], ['lock-key', 'session_id']], sep: 'none'},
 };
 
 export const ReelCover: React.FC<{day: number}> = ({day}) => {

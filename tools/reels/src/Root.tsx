@@ -3,6 +3,7 @@ import {Composition, Still} from 'remotion';
 import {ReelCover} from './ReelCover';
 import {FbCover, FB_W, FB_H} from './FbCover';
 import {YtBanner, YT_W, YT_H} from './YtBanner';
+import {FollowCardDemo} from './FollowCard';
 import {Highlight, HIGHLIGHTS} from './Highlight';
 import {HighlightCard} from './HighlightCard';
 import {Reel0, REEL0_FRAMES} from './Reel0';
@@ -17,6 +18,7 @@ export const Root: React.FC = () => (
     {HIGHLIGHTS.map((h) => <Still key={h.id} id={`HL-${h.id}`} component={Highlight} defaultProps={{id: h.id}} width={1080} height={1080} />)}
     {HIGHLIGHTS.map((h) => <Still key={'l' + h.id} id={`HL-${h.id}-light`} component={Highlight} defaultProps={{id: h.id, light: true}} width={1080} height={1080} />)}
     {HIGHLIGHTS.map((h) => <Still key={'c' + h.id} id={`HLCard-${h.id}`} component={HighlightCard} defaultProps={{id: h.id}} width={1080} height={1920} />)}
+    <Composition id="FollowCardDemo" component={FollowCardDemo} durationInFrames={150} fps={30} width={W} height={H} />
     <Still id="YtBanner" component={YtBanner} width={YT_W} height={YT_H} />
     <Still id="YtBannerGuide" component={YtBanner} defaultProps={{guide: true}} width={YT_W} height={YT_H} />
     <Still id="FbCover" component={FbCover} width={FB_W} height={FB_H} />

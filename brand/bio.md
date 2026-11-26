@@ -52,3 +52,11 @@ AI Agent Engineer · n8n · RAG · MCP | COO @ AI Rank | Founder @ Sahihly
 ```
 مهندس وكلاء ذكاء اصطناعي · أبني موظفين AI يشتغلوا بدلك | COO @ AI Rank · مؤسس صحيحلي
 ```
+
+---
+
+## 4) رابط يوتيوب للبايو
+بعد ما تغيّر معرّف القناة لـ `@eng_mohammed_saada`:
+- إنستغرام: ضيف `youtube.com/@eng_mohammed_saada` كرابط من «تعديل الملف الشخصي ← الروابط».
+- فيسبوك: «تعديل التفاصيل ← الروابط ← إضافة رابط اجتماعي ← YouTube».
+- لينكدإن: «Contact info ← Website ← Other».

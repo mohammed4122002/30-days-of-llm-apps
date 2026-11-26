@@ -15,3 +15,19 @@
 | 8 | صحيحلي | `08-sahihly.png` | ختم صح |
 
 بتنعمل من جديد من `tools/reels/src/Highlight.tsx` (التكوينات `HL-<id>` و`HL-<id>-light`).
+
+## بطاقات العنوان (أول قصة بكل هايلايت)
+`cards/` بمقاس قصة 1080×1920، ومرتّبة حسب ترتيب الهايلايت على البروفايل، وبالتبادل داكن/لايت:
+
+| الترتيب | الهايلايت | اللون | الملف |
+|---|---|---|---|
+| 1 | عني | داكن | `cards/01-about.png` |
+| 2 | 30 يوم | لايت | `cards/02-30days.png` |
+| 3 | مشاريع | داكن | `cards/03-projects.png` |
+| 4 | اشتغل معي | لايت | `cards/04-work.png` |
+| 5 | وكلاء AI | داكن | `cards/05-agents.png` |
+| 6 | آراء | لايت | `cards/06-reviews.png` |
+| 7 | نصائح | داكن | `cards/07-tips.png` |
+| 8 | صحيحلي | لايت | `cards/08-sahihly.png` |
+
+بتنعمل من `tools/reels/src/HighlightCard.tsx` (التكوين `HLCard-<id>`، ومع `--props='{"id":"about","light":true}'` للنسخة اللايت).

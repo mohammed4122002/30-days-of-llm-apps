@@ -1,6 +1,7 @@
 import React from 'react';
 import {Composition, Still} from 'remotion';
 import {ReelCover} from './ReelCover';
+import {FbCover, FB_W, FB_H} from './FbCover';
 import {Highlight, HIGHLIGHTS} from './Highlight';
 import {Reel0, REEL0_FRAMES} from './Reel0';
 import {DayReel, dayFrames} from './DayReel';
@@ -13,6 +14,7 @@ export const Root: React.FC = () => (
   <>
     {HIGHLIGHTS.map((h) => <Still key={h.id} id={`HL-${h.id}`} component={Highlight} defaultProps={{id: h.id}} width={1080} height={1080} />)}
     {HIGHLIGHTS.map((h) => <Still key={'l' + h.id} id={`HL-${h.id}-light`} component={Highlight} defaultProps={{id: h.id, light: true}} width={1080} height={1080} />)}
+    <Still id="FbCover" component={FbCover} width={FB_W} height={FB_H} />
     <Still id="Cover02" component={ReelCover} defaultProps={{day: 2}} width={W} height={H} />
     <Still id="Cover03" component={ReelCover} defaultProps={{day: 3}} width={W} height={H} />
     <Still id="Cover04" component={ReelCover} defaultProps={{day: 4}} width={W} height={H} />

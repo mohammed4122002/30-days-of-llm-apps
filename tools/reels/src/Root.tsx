@@ -26,6 +26,7 @@ export const Root: React.FC = () => (
     <Still id="Cover03" component={ReelCover} defaultProps={{day: 3}} width={W} height={H} />
     <Still id="Cover04" component={ReelCover} defaultProps={{day: 4}} width={W} height={H} />
     <Still id="Cover05" component={ReelCover} defaultProps={{day: 5}} width={W} height={H} />
+    <Still id="Cover06" component={ReelCover} defaultProps={{day: 6}} width={W} height={H} />
     <Composition id="Voice01" component={VoiceReel} defaultProps={{day: 1}} durationInFrames={voiceFrames(1)} fps={30} width={W} height={H} />
     <Composition id="Voice02" component={VoiceReel} defaultProps={{day: 2}} durationInFrames={voiceFrames(2)} fps={30} width={W} height={H} />
     <Composition id="Voice02Short" component={VoiceReel} defaultProps={{day: 2, variant: 's'}} durationInFrames={voiceFrames(2, 's')} fps={30} width={W} height={H} />
@@ -35,6 +36,8 @@ export const Root: React.FC = () => (
     <Composition id="Voice04Short" component={VoiceReel} defaultProps={{day: 4, variant: 's'}} durationInFrames={voiceFrames(4, 's')} fps={30} width={W} height={H} />
     <Composition id="Voice05" component={VoiceReel} defaultProps={{day: 5}} durationInFrames={voiceFrames(5)} fps={30} width={W} height={H} />
     <Composition id="Voice05Short" component={VoiceReel} defaultProps={{day: 5, variant: 's'}} durationInFrames={voiceFrames(5, 's')} fps={30} width={W} height={H} />
+    <Composition id="Voice06" component={VoiceReel} defaultProps={{day: 6}} durationInFrames={voiceFrames(6)} fps={30} width={W} height={H} />
+    <Composition id="Voice06Short" component={VoiceReel} defaultProps={{day: 6, variant: 's'}} durationInFrames={voiceFrames(6, 's')} fps={30} width={W} height={H} />
     <Composition id="Energy00" component={Reel0Energy} durationInFrames={energy0Frames()} fps={30} width={W} height={H} />
     <Composition id="Reel0" component={Reel0} durationInFrames={REEL0_FRAMES} fps={30} width={W} height={H} />
     {Array.from({length: 30}, (_, i) => i + 1).map((n) => (

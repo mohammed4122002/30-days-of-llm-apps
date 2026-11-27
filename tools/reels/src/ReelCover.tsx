@@ -38,6 +38,8 @@ export const COVERS: Record<number, CoverData> = {
     pieces: [['chat-teardrop-text', 'حكي'], ['brackets-curly', 'Schema'], ['table', 'بيانات']], sep: 'none'},
   5: {day: 5, dark: true, phase: 'أسبوع الأساسيات', logo: 'langchain', logoLabel: 'Chat Memory', line1: 'البوت ما بيتذكرك…', pre: 'إلا', hl: 'بالدفتر', post: '!',
     pieces: [['robot', 'النموذج'], ['bookmark-simple', 'الدفتر'], ['lock-key', 'session_id']], sep: 'none'},
+  6: {day: 6, dark: false, phase: 'أسبوع الراغ', logo: 'langchain', logoLabel: 'RAG · Chunking', line1: 'مشكلة الذكاء الاصطناعي…', pre: 'مش بالنموذج،', hl: 'بالمقص', post: '!',
+    pieces: [['file-pdf', 'PDF عربي'], ['scissors', 'تقطيع'], ['cards', 'بطاقات']], sep: 'none'},
 };
 
 export const ReelCover: React.FC<{day: number}> = ({day}) => {

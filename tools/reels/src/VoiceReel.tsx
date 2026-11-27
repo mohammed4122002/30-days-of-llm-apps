@@ -13,7 +13,11 @@ import V4S from './voiceDay04s.json';
 import {S5, KIND5} from './VoiceDay05';
 import V5 from './voiceDay05.json';
 import V5S from './voiceDay05s.json';
+import {S6, KIND6} from './VoiceDay06';
+import V6 from './voiceDay06.json';
+import V6S from './voiceDay06s.json';
 import {BassGlow, Grain, ProFx} from './voicePro';
+import {FollowCard} from './FollowCard';
 import {GOLD, GOLD_LT, H, INK, Icon, Logo, W, glossy, goldText} from './brand';
 import {BG, Confetti, Flash, Rays, Shake, Shock, Sign, Streaks, clamp, sp} from './EnergyReel';
 import V1 from './voiceDay01.json';
@@ -21,7 +25,7 @@ import V1 from './voiceDay01.json';
 // ريل بصوت محمد: المشاهد والترجمة على توقيت الصوت (بالثواني من voiceDay01.json)
 // مفتاح الخطة: رقم اليوم + نسخة اختيارية ('s' = نسخة الترند القصيرة)
 type FullPlan = Plan & {pro?: boolean; hits?: number[]};
-const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any, '4': V4 as any, '4s': V4S as any, '5': V5 as any, '5s': V5S as any};
+const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any, '4': V4 as any, '4s': V4S as any, '5': V5 as any, '5s': V5S as any, '6': V6 as any, '6s': V6S as any};
 const pid = (day: number, variant = '') => `${day}${variant}`;
 export const voiceFrames = (day: number, variant = '') => Math.round(PLANS[pid(day, variant)].end * FPS);
 const KIND: Record<string, Kind> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
@@ -282,6 +286,21 @@ const Captions: React.FC<{plan: Plan; kinds: Record<string, Kind>}> = ({plan, ki
   const page = plan.pages.find((p) => now >= p.s - 0.05 && now < p.e + 0.12);
   if (!page) return null;
   const dark = kinds[sc] === 'dark'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);
+  if ((plan as any).captionStyle === 'word') {
+    // كابشن كلمة وحدة كبيرة (أسلوب الموشن جرافيك): بتنط، والكلمات المهمة ذهبي
+    const w = page.w[0][0]; const golds: string[] = (plan as any).goldWords ?? [];
+    const isGold = golds.some((g) => w.replace(/[؟!.،]/g, '').includes(g));
+    const k = Math.min(1, s);
+    return (
+      <div style={{position: 'absolute', top: 1290, left: 40, right: 40, display: 'flex', justifyContent: 'center', fontFamily: 'Cairo', pointerEvents: 'none'}}>
+        <div dir="rtl" lang="ar" style={{fontWeight: 800, fontSize: isGold ? 132 : 118, lineHeight: 1.2, whiteSpace: 'nowrap', opacity: Math.min(1, s * 2.2),
+          transform: `translateY(${(1 - k) * 34}px) scale(${0.7 + 0.3 * k + (isGold ? 0.06 * Math.sin(Math.min(1, k) * Math.PI) : 0)})`,
+          filter: `blur(${(1 - k) * 6}px)`,
+          ...(isGold ? {...goldText, filter: `drop-shadow(0 6px 18px rgba(0,0,0,.55)) blur(${(1 - k) * 6}px)`}
+            : {color: dark ? '#fff' : INK, textShadow: dark ? '0 6px 24px rgba(0,0,0,.75), 0 0 2px #000' : '0 4px 18px rgba(255,255,255,.8)'})}}>{w}</div>
+      </div>
+    );
+  }
   return (
     <div style={{position: 'absolute', top: 1300, left: 60, right: 60, display: 'flex', justifyContent: 'center', fontFamily: 'Cairo', pointerEvents: 'none'}}>
       <div dir="rtl" lang="ar" style={{textAlign: 'center', fontWeight: 800, fontSize: 76, lineHeight: 1.35, transform: `scale(${0.85 + 0.15 * Math.min(1, s)})`, opacity: Math.min(1, s * 2),
@@ -323,8 +342,8 @@ const Opening: React.FC = () => {
   </AbsoluteFill>;
 };
 
-const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3, 4: S4, 5: S5};
-const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3, 4: KIND4, 5: KIND5};
+const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3, 4: S4, 5: S5, 6: S6};
+const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3, 4: KIND4, 5: KIND5, 6: KIND6};
 
 export const VoiceReel: React.FC<{day: number; variant?: string}> = ({day, variant = ''}) => {
   const P = PLANS[pid(day, variant)]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day, variant); const nn = String(day).padStart(2, '0');
@@ -344,6 +363,8 @@ export const VoiceReel: React.FC<{day: number; variant?: string}> = ({day, varia
     <AbsoluteFill style={{background: '#000', fontFamily: 'Cairo'}}>
       {P.pro ? <ProFx plan={P}>{scenes}<BassGlow src={mix} /></ProFx> : scenes}
       <Captions plan={P} kinds={KD} />
+      {(P as any).follow ? <Sequence from={Math.round(((P as any).follow[0] + P.off) * FPS)} durationInFrames={Math.round(((P as any).follow[1] + 1) * FPS)}>
+        <FollowCard at={0} hold={Math.round((P as any).follow[1] * FPS)} top={290} /></Sequence> : null}
       <Top day={day} total={total} />
       <Opening />
       {P.pro ? <Grain /> : null}

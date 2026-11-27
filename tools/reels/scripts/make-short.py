@@ -14,6 +14,7 @@ CUTS = {
     2: [(0.0, 9.23), (28.54, 37.02), (55.98, 67.81), (76.23, 84.59), (88.56, 94.27)],
     3: [(0.0, 12.59), (34.65, 46.69), (70.23, 79.95), (84.56, 90.03), (96.44, 103.31), (111.56, 116.78)],
     4: [(0.0, 11.23), (27.12, 38.9), (79.9, 100.31), (100.31, 107.32), (144.42, 149.45)],
+    6: [(0.0, 23.92), (121.27, 145.41), (160.96, 166.99), (189.34, 194.21)],
     5: [(0.0, 6.73), (14.71, 22.64), (28.57, 39.75), (73.73, 85.99), (89.15, 101.22), (147.03, 152.59), (174.29, 175.84)],
 }[day]
 TAIL = 2.6   # الختام (توقيع محمد)
@@ -60,7 +61,7 @@ for pg in P['pages']:
     e = remap(min(pg['e'], next(sg[1] for sg in segs if sg[0] - 1e-6 <= pg['s'] < sg[1]) - 0.001))
     pages.append({'s': s0, 'e': e, 'w': ws})
 hits = [remap(h) for h in P.get('hits', []) if remap(h) is not None]
-out = {'nocap': P.get('nocap', []), 'sound': P.get('sound'), 'off': P['off'], 'voiceDur': end_voice, 'end': round(end_voice + P['off'] + TAIL, 3), 'pro': P.get('pro', False),
+out = {'nocap': P.get('nocap', []), 'sound': P.get('sound'), 'captionStyle': P.get('captionStyle'), 'goldWords': P.get('goldWords', []), 'follow': P.get('follow'), 'off': P['off'], 'voiceDur': end_voice, 'end': round(end_voice + P['off'] + TAIL, 3), 'pro': P.get('pro', False),
        'segments': segs, 'scenes': scenes, 'pages': pages, 'hits': hits}
 json.dump(out, open(os.path.join(REELS, 'src', f'voiceDay{day:02d}s.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 print('short', end_voice, 's voice,', len(scenes), 'scenes,', len(pages), 'pages')

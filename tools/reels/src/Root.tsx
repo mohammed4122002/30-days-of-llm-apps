@@ -12,6 +12,7 @@ import {EnergyReel, energyFrames} from './EnergyReel';
 import {Reel0Energy, energy0Frames} from './Reel0Energy';
 import {VoiceReel, voiceFrames} from './VoiceReel';
 import {W, H} from './brand';
+import {Carousel05, CW, CH, C5_SLIDES} from './Carousel05';
 
 export const Root: React.FC = () => (
   <>
@@ -26,6 +27,7 @@ export const Root: React.FC = () => (
     <Still id="Cover03" component={ReelCover} defaultProps={{day: 3}} width={W} height={H} />
     <Still id="Cover04" component={ReelCover} defaultProps={{day: 4}} width={W} height={H} />
     <Still id="Cover05" component={ReelCover} defaultProps={{day: 5}} width={W} height={H} />
+    {Array.from({length: C5_SLIDES}).map((_, i) => <Still key={'c5' + i} id={`Car05-${i + 1}`} component={Carousel05} defaultProps={{n: i + 1}} width={CW} height={CH} />)}
     <Still id="Cover06" component={ReelCover} defaultProps={{day: 6}} width={W} height={H} />
     <Composition id="Voice01" component={VoiceReel} defaultProps={{day: 1}} durationInFrames={voiceFrames(1)} fps={30} width={W} height={H} />
     <Composition id="Voice02" component={VoiceReel} defaultProps={{day: 2}} durationInFrames={voiceFrames(2)} fps={30} width={W} height={H} />

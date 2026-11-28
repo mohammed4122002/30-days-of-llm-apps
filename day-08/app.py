@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnablePassthrough
 
 retriever = policy_retriever(k=2)
 fmt = lambda ds: "\n\n".join(d.page_content for d in ds)
-prompt = ChatPromptTemplate.from_template("أجب فقط من السياق. إن لم تجد الجواب قل «لا أعرف».\n\nالسياق:\n{context}\n\nالسؤال: {question}")
+prompt = ChatPromptTemplate.from_template("أجب بالعربية وباختصار، وفقط من السياق. إن لم تجد الجواب قل «لا أعرف».\n\nالسياق:\n{context}\n\nالسؤال: {question}")
 rag = {"context": retriever | fmt, "question": RunnablePassthrough()} | prompt | get_llm() | StrOutputParser()
 for q in ["كم يوم الإجازة السنوية؟", "كم راتب المدير العام؟"]:
     print("س:", q); print("ج:", rag.invoke(q)); print()

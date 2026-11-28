@@ -31,7 +31,9 @@ fs.writeFileSync(path.resolve(__dirname,'../src/days.ts'),`// ملف مولّد 
 const need=new Set(['brain','flag','check','lightbulb','question','rocket-launch','pulse','calendar-check','heart','repeat','bookmark-simple','user-plus',
  'sparkle','arrow-left','target','code','translate','play','chat-circle-dots','check-circle','arrow-down','terminal-window','file-code','hammer','trophy','flow-arrow','warning-circle','cursor-text',
  // ريلز الصوت
- 'graphics-card','tag','lock','lock-open','fork-knife','door','scroll','key','file','github-logo','warning','x-circle','chat-text','robot','coins','receipt','seal-check','cooking-pot','hand-pointing','chat-teardrop-text','shield-warning','lock-key','chef-hat','cpu','money','arrow-bend-right-down','chat-centered-dots','fire','smiley-x-eyes','user-circle','paper-plane-right','link','x','plus']);
+ 'graphics-card','tag','lock','lock-open','fork-knife','door','scroll','key','file','github-logo','warning','x-circle','chat-text','robot','coins','receipt','seal-check','cooking-pot','hand-pointing','chat-teardrop-text','shield-warning','lock-key','chef-hat','cpu','money','arrow-bend-right-down','chat-centered-dots','fire','smiley-x-eyes','user-circle','paper-plane-right','link','x','plus',
+ // اليوم 6-7 (خريطة المعاني)
+ 'car-profile','bus','train','bicycle','cat','dog','bird','apple-logo','coffee','desktop','device-mobile','game-controller','graduation-cap','map-trifold','house-line','globe-hemisphere-east','map-pin-line','crosshair','floppy-disk','moon-stars','files','folder','eye-slash','rocket-launch','receipt','file-text','file-pdf','file-magnifying-glass','clock-counter-clockwise','magnifying-glass','users-three','lightning','sparkle','scissors','stack']);
 days.forEach(d=>{need.add(d.icon);if(d.next)need.add(d.next.icon);d.flow.forEach(([i])=>need.add(i));});
 const icons={};
 for(const n of need)for(const w of ['fill','duotone','thin','bold']){const f=path.join(ICONS,'@phosphor-icons/core/assets',w,`${n}-${w}.svg`);if(fs.existsSync(f))icons[`${n}:${w}`]=fs.readFileSync(f,'utf8');}

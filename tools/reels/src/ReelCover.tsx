@@ -40,6 +40,8 @@ export const COVERS: Record<number, CoverData> = {
     pieces: [['robot', 'النموذج'], ['bookmark-simple', 'الدفتر'], ['lock-key', 'session_id']], sep: 'none'},
   6: {day: 6, dark: false, phase: 'أسبوع الراغ', logo: 'langchain', logoLabel: 'RAG · Chunking', line1: 'مش بالنموذج…', pre: 'المشكلة', hl: 'بالمقص', post: '!',
     pieces: [['file-pdf', 'PDF عربي'], ['scissors', 'تقطيع'], ['stack', 'بطاقات']], sep: 'none'},
+  7: {day: 7, dark: true, phase: 'أسبوع الراغ', logo: 'huggingface', logoLabel: 'Embeddings · FAISS', line1: 'بحثت عن «مركبة»…', pre: 'جابلي', hl: 'السيارة', post: '!',
+    pieces: [['bus', 'مركبة'], ['map-trifold', 'خريطة المعاني'], ['car-profile', 'سيارة']], sep: 'none'},
 };
 
 export const ReelCover: React.FC<{day: number}> = ({day}) => {

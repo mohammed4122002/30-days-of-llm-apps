@@ -16,6 +16,9 @@ import V5S from './voiceDay05s.json';
 import {S6, KIND6} from './VoiceDay06';
 import V6 from './voiceDay06.json';
 import V6S from './voiceDay06s.json';
+import {S7, KIND7, World7} from './VoiceDay07';
+import V7 from './voiceDay07.json';
+import V7S from './voiceDay07s.json';
 import {BassGlow, Grain, ProFx} from './voicePro';
 import {FollowCard} from './FollowCard';
 import {GOLD, GOLD_LT, H, INK, Icon, Logo, W, glossy, goldText} from './brand';
@@ -25,7 +28,7 @@ import V1 from './voiceDay01.json';
 // ريل بصوت محمد: المشاهد والترجمة على توقيت الصوت (بالثواني من voiceDay01.json)
 // مفتاح الخطة: رقم اليوم + نسخة اختيارية ('s' = نسخة الترند القصيرة)
 type FullPlan = Plan & {pro?: boolean; hits?: number[]};
-const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any, '4': V4 as any, '4s': V4S as any, '5': V5 as any, '5s': V5S as any, '6': V6 as any, '6s': V6S as any};
+const PLANS: Record<string, FullPlan> = {'1': V1 as any, '2': V2 as any, '2s': V2S as any, '3': V3 as any, '3s': V3S as any, '4': V4 as any, '4s': V4S as any, '5': V5 as any, '5s': V5S as any, '6': V6 as any, '6s': V6S as any, '7': V7 as any, '7s': V7S as any};
 const pid = (day: number, variant = '') => `${day}${variant}`;
 export const voiceFrames = (day: number, variant = '') => Math.round(PLANS[pid(day, variant)].end * FPS);
 const KIND: Record<string, Kind> = {hook: 'dark', four: 'dark', letsgo: 'gold', subs: 'sky', locked: 'dark', hf: 'dark', diff: 'gold', restaurant: 'dark',
@@ -285,7 +288,28 @@ const Captions: React.FC<{plan: Plan; kinds: Record<string, Kind>}> = ({plan, ki
   if (sc === 'outro' || ((plan as any).nocap ?? []).includes(sc)) return null;   // nocap: المشهد بيعرض النص نفسه
   const page = plan.pages.find((p) => now >= p.s - 0.05 && now < p.e + 0.12);
   if (!page) return null;
-  const dark = kinds[sc] === 'dark'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);
+  const dark = kinds[sc] === 'dark' || kinds[sc] === 'map'; const s = sp((now - page.s + 0.05) * FPS, 12, 260);
+  if ((plan as any).captionStyle === 'karaoke') {
+    // كاريوكي: 2-3 كلمات، والكلمة الحالية ذهبية وتحتها خط قلم بيمشي معها
+    const golds: string[] = (plan as any).goldWords ?? []; const k0 = Math.min(1, s);
+    return (
+      <div style={{position: 'absolute', top: 1320, left: 40, right: 40, display: 'flex', justifyContent: 'center', fontFamily: 'Cairo', pointerEvents: 'none'}}>
+        <div dir="rtl" lang="ar" style={{display: 'flex', gap: 26, whiteSpace: 'nowrap', opacity: Math.min(1, s * 2.2), transform: `translateY(${(1 - k0) * 30}px)`}}>
+          {page.w.map(([w, t], i) => {
+            const nxt = page.w[i + 1]?.[1] ?? page.e; const active = now >= t && now < nxt; const said = now >= t;
+            const isGold = golds.some((g) => w.replace(/[؟!.،…]/g, '').includes(g));
+            const k = Math.min(1, sp((now - t) * FPS, 10, 320)); const bar = Math.min(1, Math.max(0, (now - t) / Math.max(0.15, nxt - t)));
+            return <div key={i} style={{position: 'relative', fontWeight: 800, fontSize: 96, lineHeight: 1.25, opacity: said ? 1 : 0.35,
+              transform: `scale(${active ? 1 + 0.1 * k : 1}) translateY(${active ? -6 * k : 0}px)`,
+              ...(active || (said && isGold) ? {...goldText, filter: 'drop-shadow(0 6px 16px rgba(0,0,0,.8))'} : {color: '#fff', textShadow: '0 6px 22px rgba(0,0,0,.85), 0 0 3px #000'})}}>
+              {w}
+              {active ? <div style={{position: 'absolute', right: 0, bottom: 2, height: 12, width: `${bar * 100}%`, borderRadius: 8, background: 'linear-gradient(270deg,#FFF1C4,#E8C066)', boxShadow: '0 0 18px rgba(255,214,110,.8)'}} /> : null}
+            </div>;
+          })}
+        </div>
+      </div>
+    );
+  }
   if ((plan as any).captionStyle === 'word') {
     // كابشن كلمة وحدة كبيرة (أسلوب الموشن جرافيك): بتنط، والكلمات المهمة ذهبي
     const w = page.w[0][0]; const golds: string[] = (plan as any).goldWords ?? [];
@@ -342,26 +366,27 @@ const Opening: React.FC = () => {
   </AbsoluteFill>;
 };
 
-const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3, 4: S4, 5: S5, 6: S6};
-const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3, 4: KIND4, 5: KIND5, 6: KIND6};
+const SCENES: Record<number, Record<string, SceneFC>> = {1: S, 2: S2, 3: S3, 4: S4, 5: S5, 6: S6, 7: S7};
+const WORLDS: Record<number, React.FC<{plan: Plan}>> = {7: World7};
+const KINDS: Record<number, Record<string, Kind>> = {1: KIND, 2: KIND2, 3: KIND3, 4: KIND4, 5: KIND5, 6: KIND6, 7: KIND7};
 
 export const VoiceReel: React.FC<{day: number; variant?: string}> = ({day, variant = ''}) => {
   const P = PLANS[pid(day, variant)]; const SC = SCENES[day]; const KD = KINDS[day]; const total = voiceFrames(day, variant); const nn = String(day).padStart(2, '0');
-  const mix = `audio/voice/day-${nn}${variant}-mix.wav`;
+  const mix = `audio/voice/day-${nn}${variant}-mix.wav`; const WD = WORLDS[day];
   const scenes = P.scenes.map((sc) => {
     const [k, a, b] = sc; const t0 = (sc as any)[3] ?? a;   // t0 = بداية المشهد بزمن الصوت الأصلي (للنسخة القصيرة)
     const from = Math.round((a + P.off) * FPS) + (k === 'hook' ? -Math.round(P.off * FPS) : 0); const to = Math.round((b + P.off) * FPS);
     const Sc = SC[k]; const kind = KD[k];
     return <Sequence key={k} name={k} from={from} durationInFrames={to - from}>
-      <BG kind={kind} />{kind === 'dark' ? <Streaks dark /> : null}
+      {kind === 'map' ? null : <BG kind={kind} />}{kind === 'dark' ? <Streaks dark /> : null}
       <Sc t0={k === 'hook' ? t0 - P.off : t0} />
-      {k !== 'hook' && k !== 'outro' ? <Flash frames={4} color={kind === 'dark' ? '#E8C066' : '#FFF6DA'} /> : null}
+      {k !== 'hook' && k !== 'outro' && kind !== 'map' ? <Flash frames={4} color={kind === 'dark' ? '#E8C066' : '#FFF6DA'} /> : null}
       {['four', 'hf', 'golden', 'warn', 'one', 'pipe'].includes(k) ? <Shock y="40%" color={kind === 'gold' ? INK : GOLD_LT} /> : null}
     </Sequence>;
   });
   return (
     <AbsoluteFill style={{background: '#000', fontFamily: 'Cairo'}}>
-      {P.pro ? <ProFx plan={P}>{scenes}<BassGlow src={mix} /></ProFx> : scenes}
+      {P.pro ? <ProFx plan={P}>{WD ? <WD plan={P} /> : null}{scenes}<BassGlow src={mix} /></ProFx> : <>{WD ? <WD plan={P} /> : null}{scenes}</>}
       <Captions plan={P} kinds={KD} />
       {(P as any).follow ? <Sequence from={Math.round(((P as any).follow[0] + P.off) * FPS)} durationInFrames={Math.round(((P as any).follow[1] + 1) * FPS)}>
         <FollowCard at={0} hold={Math.round((P as any).follow[1] * FPS)} top={290} /></Sequence> : null}

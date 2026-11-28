@@ -8,7 +8,7 @@ import {clamp, sp} from './EnergyReel';
 export const FPS = 30;
 export type Page = {s: number; e: number; w: [string, number][]};
 export type Plan = {off: number; end: number; scenes: [string, number, number][]; pages: Page[]};
-export type Kind = 'dark' | 'sky' | 'gold';
+export type Kind = 'dark' | 'sky' | 'gold' | 'map';   // map = شفاف فوق عالم اليوم (World)
 export type SceneFC = React.FC<{t0: number}>;
 
 // ── أدوات ──

@@ -296,6 +296,56 @@ elif day == 6:   # ملف صوت ناعم + لحظات «سينمائية» لل
     X.add(X.riser(1.2) * .4, v(190.64) - 1.2, .16)                                    # التوقيع
     for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.6), v(190.64) + i * .1, .12, (-.5, -.2, .2, .5)[i])
     chime(v(191.43), 98, .2)
+elif day == 7:   # «خريطة المعاني»: ضربات أقوى للتايبوغرافي، ووش لسحبات الكاميرا، بدون فوضى
+    def soft_hit(at, g=.3): X.add(lp(X.impact(.5), 220), at, g)
+    def slam(at, g=.36): X.add(lp(X.impact(.6), 400), at, g); X.add(X.bell(74, 1.2), at, g * .4)
+    def chime(at, m=88, g=.22): X.add(X.bell(m, 1.4), at, g)
+    def note(at, m=84, g=.18, pan=0): X.add(X.pluck(m, .35, .14, .45), at, g, pan)
+    def whip(at, g=.22, up=True): w = lp(X.whoosh(.45, up), 3200); X.add(w, at - .2, g)
+    for i in range(10): X.add(X.key(), v(2.0) + i * .15, .1)                         # كتابة البحث
+    chime(v(4.06), 91, .24); chime(v(4.1), 96, .14)                                   # النتيجة
+    soft_hit(v(6.32), .26); note(v(6.65), 70, .18)                                    # 0 كلمات
+    slam(v(8.4), .36)                                                                 # ؟
+    whip(v(10.0), .2); chime(v(10.4), 86, .16)
+    for i, m in enumerate([84, 88, 91]): note(v(14.89) + i * .12, m, .14)             # التعريف
+    for i in range(3): X.add(X.tick(90), v(16.2) + i * .07, .2)                       # ضغطة متابعة
+    for i in range(7): X.add(X.pluck(79 + i, .2, .08, .3), v(18.6) + i * .05, .07)    # شبكة الأيام
+    chime(v(23.2), 93, .24)                                                           # اليوم 7
+    whip(v(24.0), .2); for_k = [X.add(X.key(), v(28.3) + i * .14, .12) for i in range(5)]
+    note(v(30.1), 81, .14); soft_hit(v(31.0), .28); note(v(31.05), 66, .2)            # 0 من 0
+    slam(v(31.94), .4)                                                                # صفر!
+    whip(v(33.3), .18); note(v(35.5), 72, .16); chime(v(36.6), 91, .22)               # ≠ / ≈
+    whip(v(38.85), .18); chime(v(39.0), 86, .18)                                      # لعبة
+    for tt, m in ((44.0, 81), (47.15, 84), (49.54, 88)): whip(v(tt), .16); note(v(tt), m, .18)
+    for i, tt in enumerate((52.24, 52.85, 53.45)): soft_hit(v(tt), .26); note(v(tt), 79 + i * 5, .2)   # 3-2-1
+    slam(v(54.12), .36); whip(v(54.7), .22, False)                                    # القطة! (بتطير)
+    chime(v(57.14), 84, .16); chime(v(59.67), 91, .2)
+    X.add(X.riser(1.6) * .5, v(60.72) - 1.6, .2); slam(v(60.72), .34)                 # السر
+    soft_hit(v(62.54), .22); X.add(X.riser(1.8) * .5, v(64.49) - 1.8, .22); slam(v(64.49), .4)   # Embeddings
+    whip(v(66.28), .26); chime(v(66.4), 86, .18)                                      # الخريطة
+    for i in range(11): X.add(X.pluck(76 + (i * 5) % 17, .25, .1, .3), v(68.57) + i * .07, .08, (i % 5 - 2) * .2)   # البيوت
+    whip(v(72.4), .22); chime(v(74.14), 91, .22); note(v(75.45), 88, .18)            # جيران
+    whip(v(77.0), .28); note(v(77.3), 76, .18)                                        # القطة بحي ثاني
+    whip(v(80.6), .2); chime(v(81.87), 84, .16); soft_hit(v(84.25), .24)              # العنوان / لا
+    X.add(X.riser(.8) * .5, v(84.65) - .8, .2); slam(v(84.65), .4)                    # 768
+    for i in range(14): X.add(X.tick(86 + (i % 4) * 2), v(84.7) + i * .08, .08)
+    whip(v(87.4), .2); chime(v(88.0), 88, .18)
+    for i in range(14): X.add(X.key(), v(89.2) + i * .3, .1)                          # كود
+    for tt, m in ((92.1, 81), (93.92, 84), (96.14, 86), (101.36, 88), (103.5, 91), (105.64, 93)): note(v(tt), m, .17)
+    for i in range(6): X.add(X.key(), v(110.1) + i * .14, .12)
+    whip(v(111.0), .2); soft_hit(v(112.1), .3); chime(v(112.15), 79, .16)            # دبوس السؤال
+    for i in range(5): X.add(X.bell(98, .5), v(112.6) + i * 1.43, .05)                # رادار
+    chime(v(115.25), 91, .24); chime(v(118.75), 93, .24)                              # 1 / 2
+    whip(v(122.3), .26); note(v(123.38), 74, .16)
+    for i in range(3): X.add(X.bell(96 + i * 2, .9), v(123.6) + i * .5, .06)          # Zzz
+    X.add(X.riser(1.2) * .5, v(125.4) - 1.2, .2); chime(v(125.45), 88, .2)            # الخلاصة
+    note(v(126.94), 76, .16); chime(v(129.04), 91, .24); chime(v(129.84), 96, .2)     # المسافة بين المعاني
+    whip(v(133.0), .18); note(v(134.34), 86, .16); chime(v(136.37), 88, .18)
+    for tt, m in ((142.34, 81), (143.09, 84), (143.55, 86), (144.42, 88)): note(v(tt), m, .14)
+    chime(v(146.2), 88, .18); X.add(X.tick(90), v(147.6), .22); chime(v(147.65), 93, .2); note(v(148.38), 86, .16)
+    X.add(X.riser(1.2) * .4, v(151.79) - 1.2, .16)
+    for i, m in enumerate([86, 90, 93, 98]): X.add(X.bell(m, 1.6), v(151.79) + i * .1, .12, (-.5, -.2, .2, .5)[i])
+    chime(v(152.93), 98, .2)
 ting(SC['outro'][0] + .25, .5)
 sfx = X.master(END, wet=.18)
 
